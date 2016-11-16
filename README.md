@@ -2,9 +2,9 @@
 
 1. Login to github.
 2. Then accept this git assignment.
-3. **Go here: https://classroom.github.com/assignment-invitations/549c7b72f25267680b9a1ad1c393aa10**
-4. Make the changes requested.
-5. Make sure it works.
+3. Make the requested changes in YourLastName_Java1.java
+4. Compile.
+5. Make sure it works. READ THE ERROR MESSAGES
 6.  In your own repository always edit the README.md file to include your name, period, and course, e.g. Write in the file:
   1.  Period=7
   2.  Course="Pre AP CS"
