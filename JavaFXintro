@@ -5,7 +5,6 @@
  */
 package livesay_2_javafxintro;
 
-
 import java.util.Random;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -15,8 +14,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import javafx.stage.Stage;
+import javafx.scene.shape.Polygon;
 
 public class Livesay_2_JavaFxintro extends Application {
+
     static Random randy = new Random();
     static Canvas canvas = new Canvas(400, 400);
 
@@ -30,41 +31,32 @@ public class Livesay_2_JavaFxintro extends Application {
         Group root = new Group();
         canvas = new Canvas(650, 650);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-       // drawTriangle(gc);
-   
+        // drawTriangle(gc);
+
         //drawShapes(gc);
         gc.setFill(Color.BLACK);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        
-         //    drawSquare(gc);
-        drawAwesomeTriangles(gc); 
+        drawAwesomeTriangles(gc);
+        drawSquare(gc);
         root.getChildren().add(canvas);
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
 
-    //void drawSquare(GraphicsContext gc) {
-     //   gc.setFill(Color.DARKORCHID);
-      //  gc.setStroke(Color.BURLYWOOD);
-        //gc.setLineWidth(5);
-        //gc.fillRect(canvas.getWidth() / 2 + 50, canvas.getHeight() / 2 + 50, 150, 150);
-    //}
+    void drawAwesomeTriangles(GraphicsContext gc) {
+        for (int i = 0; i < 10000; i++) {
 
-    void drawAwesomeTriangles(GraphicsContext gc){
-        for (int i = 0; i < 10000; i++){
-            
             int startx = randy.nextInt(320);
             int starty = randy.nextInt(320);
-            double [] xs = {startx - (5 + randy.nextInt(20)), startx * 2, startx + (5 + randy.nextInt(20))};
-            double [] ys = {starty - (5 + randy.nextInt(20)), starty * 2, starty + (5 + randy.nextInt(20))};
+            double[] xs = {startx - (5 + randy.nextInt(20)), startx * 2, startx + (5 + randy.nextInt(20))};
+            double[] ys = {starty - (5 + randy.nextInt(20)), starty * 2, starty + (5 + randy.nextInt(20))};
             drawTriangle(gc, xs, ys);
         }
     }
 
+    void drawTriangle(GraphicsContext gc, double[] xs, double[] ys) {
 
-    void drawTriangle(GraphicsContext gc, double [] xs, double [] ys) {
-        
-       int r = randy.nextInt(180);
+        int r = randy.nextInt(180);
         int g = randy.nextInt(1);
         int b = randy.nextInt(250);
         gc.setFill(Color.rgb(r, g, b));
@@ -73,11 +65,25 @@ public class Livesay_2_JavaFxintro extends Application {
 
     }
 
-        void drawHouse(GraphicsContext gc) {
-        //drawSquare(gc);
-        //drawTriangle(gc);
+    void drawSquare(GraphicsContext gc) {
+        int r = randy.nextInt(255);
+        int g = randy.nextInt(255);
+        int b = randy.nextInt(255);
+        gc.setFill(Color.rgb(r, g, b));
+        gc.setStroke(Color.BURLYWOOD);
+        gc.setLineWidth(5);
+        gc.fillRect(canvas.getWidth() / 2 + 50, canvas.getHeight() / 2 + 50, 150, 150);
     }
-        
+
+    void drawRect(GraphicsContext gc) {
+        int r = randy.nextInt(255);
+        int g = randy.nextInt(255);
+        int b = randy.nextInt(255);
+        gc.setFill(Color.rgb(r, g, b));
+        gc.setStroke(Color.BURLYWOOD);
+        gc.setLineWidth(5);
+    }
+
     private void drawShapes(GraphicsContext gc) {
         gc.setFill(Color.CHOCOLATE);
         gc.setStroke(Color.BLUE);
