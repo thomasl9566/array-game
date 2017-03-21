@@ -15,6 +15,7 @@
  */
 package mostbasicjavafxmove;
 
+import java.util.Random;
 import java.util.ArrayList;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -33,6 +34,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.shape.Shape;
 import javafx.event.Event;
 import javafx.scene.Node;
+import javafx.scene.text.*;
 
 /**
  * For more information see:
@@ -43,37 +45,39 @@ import javafx.scene.Node;
  */
 public class MostBasicJavaFXMove extends Application {
 
-    static ArrayList<Rectangle> badblockz = new ArrayList();
+    public static final int BOARDWIDTH = 600;
+    public static final int BOARDHEIGHT = 600;
+    static ArrayList<BadBlock> badblockz = new ArrayList();
     static ArrayList<String> input = new ArrayList<String>();
-    static Rectangle rect;
+    //static Rectangle rect;
     static Rectangle box;
     static Hero mrclean;
+    static Text text = new Text(50, 50, "twest");
+    static Scene scene;
+    Rectangle finishline;
 
     @Override
     public void start(Stage primaryStage) {
 
         Group root = new Group();
-        Scene scene = new Scene(root);
+        scene = new Scene(root, 600, 600);
         primaryStage.setTitle("box check");
         primaryStage.setScene(scene);
-
-        Canvas canvas = new Canvas(600, 600);
-
+        Canvas canvas = new Canvas(BOARDWIDTH, BOARDHEIGHT);
         //Notice gc is not being used yet 
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         //notice we are creating shape objects 
-       // box = new Rectangle(300, 300, 23, 23);
-      //  box.setFill(Color.PLUM);
-        mrclean = new Hero(200, 200);
-        
-       
-      
-        rect = new Rectangle(150, 50, 25, 25);
-        rect.setFill(Color.BLUE);
-
-        // notice the difference in how an ArrayList adds items 
-        badblockz.add(rect);
+        // box = new Rectangle(300, 300, 23, 23);
+        //  box.setFill(Color.PLUM);
+        mrclean = new Hero(300, 50);
+        int nexty = 100;
+        for (int i = 0; i < 4; i++) {
+            BadBlock enemy = new BadBlock(nexty, 50, 25);
+            enemy.setFill(Color.BLUE);
+            badblockz.add(enemy);
+            nexty += 75;
+        }
 
         //we have created an animation timer --- the class MUST be overwritten - look below 
         AnimationTimer timer = new MyTimer();
@@ -99,6 +103,8 @@ public class MostBasicJavaFXMove extends Application {
                     mrclean.setY(mrclean.getY() + 5);
                     box.setFill(Color.ORANGE);
                     checkBounds(mrclean);
+                } else if (event.getCode() == KeyCode.SPACE) {
+                    box.setFill(Color.ORANGE);
                 }
             }
         });
@@ -114,12 +120,21 @@ public class MostBasicJavaFXMove extends Application {
 
         //try disabling canvas --- notice the difference 
         root.getChildren().add(canvas);
-        //notice we are manually adding the shape objects to the "root" window
-        root.getChildren().add(rect);
-        root.getChildren().add(mrclean);
 
-        timer.start();
+        //notice we are manually adding the shape objects to the "root" window
+        for (BadBlock b : badblockz) {
+            root.getChildren().add(b);
+        }
+
+        root.getChildren().add(mrclean);
+        finishline = new Rectangle(scene.getWidth(), 50, Color.BLACK);
+        //finishline.setY(badblockz.get(badblockz.size()-1).getY()+50);
+        //finishline.setFill(Color.RED);
+        root.getChildren().add(finishline);
+        timer.start(); 
+        
         primaryStage.show();
+
     }
 
     /**
@@ -130,23 +145,39 @@ public class MostBasicJavaFXMove extends Application {
     ///  vvvvvvvvvvvv   MAIN vvvvvvvvvvv
     public static void main(String[] args) {
         launch(args);
+
     }
 
-    static class Hero extends Rectangle{
-        
+    static class Hero extends Rectangle {
+
         int health = 50;
-        
-        public Hero(int x, int y){
-            this.setX(x);
+
+        public Hero(int x, int y) {
+            this.setY(y);
             this.setX(x);
             this.setHeight(33);
             this.setWidth(33);
             this.setFill(Color.PLUM);
         }
-        
+
     }
-    
-    
+
+    static class BadBlock extends Rectangle {
+
+        int health = 50;
+
+        public BadBlock(int y, int width, int height) {
+
+            int x = new Random().nextInt(MostBasicJavaFXMove.BOARDWIDTH - width);
+            this.setX(x);
+            this.setY(y);
+            this.setHeight(height);
+            this.setWidth(width);
+            this.setFill(Color.PLUM);
+        }
+
+    }
+
     //// ^^^^^^^^^^^  MAIN ^^^^^^^^^^^^^
     // we create our time here --- to animate 
     private class MyTimer extends AnimationTimer {
@@ -167,27 +198,38 @@ public class MostBasicJavaFXMove extends Application {
 
         }
 
-        private void doHandle() {
+        public void doHandle() {
             checkBounds(mrclean);
-            if (movedown && rect.getY() < 555) {
-                rect.setY(rect.getY() + 5);
+            for (BadBlock rect : badblockz) {
+                if (movedown && rect.getX() < scene.getWidth()) {
+                    rect.setX(rect.getX() + 5);
+                }
+                if (!movedown && rect.getX() > 1) {
+                    rect.setX(rect.getX() - 5);
+                }
+                if (rect.getX() > scene.getWidth()) {
+                    movedown = false;
+                }
+                if (rect.getX() < 1) {
+                    movedown = true;
+                }
             }
-            if (!movedown && rect.getY() > 1) {
-                rect.setY(rect.getY() - 5);
-            }
-            if (rect.getY() > 550) {
-                movedown = false;
-            }
-            if (rect.getY() < 1) {
-                movedown = true;
-            }
-
             // stop();
             // System.out.println("Animation stopped");
+            finishline.setY(scene.getHeight() - 50);
+            finishline.setX(0);
+            finishline.setHeight(50);
+            finishline.setWidth(scene.getWidth());
         }
     }
 
-    private void checkBounds(Rectangle box) {
+    static void scoreDisplay() {
+        Text t = new Text();
+        t.setText("This is a text sample");
+        t.setFill(Color.BLACK);
+    }
+
+    private void checkBounds(Rectangle mrclean) {
         // checkBounds is called in two different locations --- it's really only necessary in the animation dohandle
         // experiment - check the differences
 
@@ -195,7 +237,7 @@ public class MostBasicJavaFXMove extends Application {
 
         // notice the difference in how an ArrayList iterates through items 
         for (Rectangle badblock : badblockz) {
-            if (box.getBoundsInParent().intersects(badblock.getBoundsInParent())) {
+            if (mrclean.getBoundsInParent().intersects(badblock.getBoundsInParent())) {
                 collisionDetected = true;
                 badblock.setFill(Color.RED);
             } else {
@@ -203,10 +245,12 @@ public class MostBasicJavaFXMove extends Application {
             }
         }
         if (collisionDetected) {
-            box.setFill(Color.RED);
+            mrclean.setFill(Color.RED);
         } else {
-            box.setFill(Color.ORANGE);
+            mrclean.setFill(Color.ORANGE);
         }
+        if (mrclean.getY() > mrclean.getParent().getBoundsInLocal().getHeight()){
+      System.exit(0);
     }
-
+    }
 }
