@@ -74,7 +74,8 @@ public class MostBasicJavaFXMove extends Application {
         //  box.setFill(Color.PLUM);
         mrclean = new Hero(300, 50);
         winscreen = new Rectangle();
-        wintext = new Text();
+        Text wintext = new Text("he said to me");
+        wintext.setFill(Color.WHITE);
         int nexty = 100;
         for (int i = 0; i < 4; i++) {
             BadBlock enemy = new BadBlock(nexty, 50, 25);
@@ -231,22 +232,10 @@ public class MostBasicJavaFXMove extends Application {
             finishline.setWidth(scene.getWidth());
         }
     }
-
-    static void scoreDisplay() {
-        Text t = new Text();
-        t.setText("This is a text sample");
-        t.setFill(Color.BLACK);
-    }
-
-    static void lastSpeed() {
-
-    }
-
+    
     public void splashScreen() {
         winscreen.setWidth(BOARDWIDTH);
         winscreen.setHeight(BOARDHEIGHT);
-        wintext.setText("AAAA");
-        wintext.setFill(Color.WHITE);
     }
 
     private void checkBounds(Rectangle mrclean) {
