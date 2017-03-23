@@ -51,12 +51,12 @@ public class MostBasicJavaFXMove extends Application {
     static ArrayList<String> input = new ArrayList<String>();
     //static Rectangle rect;
     static Rectangle box;
-    static Rectangle winscreen;
+    static Rectangle winscreen = new Rectangle(0, 0, 0, 0);
+    static Rectangle losescreen = new Rectangle(0, 0, 0, 0);
     static Hero mrclean;
-    static Text text = new Text(50, 50, "twest");
-    static Text wintext = new Text(300, 300, "test");
+    static Text text = new Text(50, 300, "");
     static Scene scene;
-    Rectangle finishline;
+    static Rectangle finishline;
 
     @Override
     public void start(Stage primaryStage) {
@@ -74,8 +74,7 @@ public class MostBasicJavaFXMove extends Application {
         //  box.setFill(Color.PLUM);
         mrclean = new Hero(300, 50);
         winscreen = new Rectangle();
-        Text wintext = new Text("he said to me");
-        wintext.setFill(Color.WHITE);
+        losescreen = new Rectangle();
         int nexty = 100;
         for (int i = 0; i < 4; i++) {
             BadBlock enemy = new BadBlock(nexty, 50, 25);
@@ -132,7 +131,8 @@ public class MostBasicJavaFXMove extends Application {
 
         root.getChildren().add(mrclean);
         root.getChildren().add(winscreen);
-        root.getChildren().add(wintext);
+        root.getChildren().add(losescreen);
+        root.getChildren().add(text);
         finishline = new Rectangle(scene.getWidth(), 50, Color.BLACK);
         //finishline.setY(badblockz.get(badblockz.size()-1).getY()+50);
         //finishline.setFill(Color.RED);
@@ -232,10 +232,26 @@ public class MostBasicJavaFXMove extends Application {
             finishline.setWidth(scene.getWidth());
         }
     }
-    
-    public void splashScreen() {
+
+    static void splashScreen() {
         winscreen.setWidth(BOARDWIDTH);
         winscreen.setHeight(BOARDHEIGHT);
+        winscreen.setFill(Color.GREEN);
+        finishline.setFill(Color.GREEN);
+        text.setFill(Color.WHITE);
+        text.setText("YOU WIN");
+        text.setFont(Font.font("Veranda", 99));
+
+    }
+
+    static void splashScreen2() {
+        losescreen.setWidth(BOARDWIDTH);
+        losescreen.setHeight(BOARDHEIGHT);
+        losescreen.setFill(Color.RED);
+        finishline.setFill(Color.RED);
+        text.setFill(Color.WHITE);
+        text.setText("YOU LOSE");
+        text.setFont(Font.font("Veranda", 99));
     }
 
     private void checkBounds(Rectangle mrclean) {
@@ -249,6 +265,7 @@ public class MostBasicJavaFXMove extends Application {
             if (mrclean.getBoundsInParent().intersects(badblock.getBoundsInParent())) {
                 collisionDetected = true;
                 badblock.setFill(Color.RED);
+                splashScreen2();
             } else {
                 badblock.setFill(Color.BLUE);
             }
