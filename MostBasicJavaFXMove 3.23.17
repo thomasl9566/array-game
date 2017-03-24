@@ -179,17 +179,19 @@ public class MostBasicJavaFXMove extends Application {
 
     // static class 
     static class BadBlock extends Rectangle {
-
-        int health = 50;
-
+        boolean moveright = true;
+        
         public BadBlock(int y, int width, int height) {
 
             int x = new Random().nextInt(MostBasicJavaFXMove.BOARDWIDTH - width);
+            moveright = (new Random().nextInt(2) == 1);
+            
             this.setX(x);
             this.setY(y);
             this.setHeight(height);
             this.setWidth(width);
             this.setFill(Color.PLUM);
+            
         }
 
     }
@@ -197,9 +199,6 @@ public class MostBasicJavaFXMove extends Application {
     //// ^^^^^^^^^^^  MAIN ^^^^^^^^^^^^^
     // we create our time here --- to animate 
     private class MyTimer extends AnimationTimer {
-
-        boolean movedown = true;
-
         /// handle is defined by the abstract parent class -- it must be redined 
         /// this is what happens again and again until stop()
         @Override
@@ -217,17 +216,17 @@ public class MostBasicJavaFXMove extends Application {
         public void doHandle() {
             checkBounds(mrclean);
             for (BadBlock rect : badblockz) {
-                if (movedown && rect.getX() < scene.getWidth()) {
-                    rect.setX(rect.getX() + 10);
+                if (rect.moveright && rect.getX() <= scene.getWidth()) {
+                    rect.setX(rect.getX() + 7);
                 }
-                if (!movedown && rect.getX() > 1) {
-                    rect.setX(rect.getX() - 10);
+                if (!rect.moveright && rect.getX() >= 1) {
+                    rect.setX(rect.getX() - 7);
                 }
-                if (rect.getX() > scene.getWidth()) {
-                    movedown = false;
+                if (rect.getX() >= scene.getWidth()) {
+                    rect.moveright = false;
                 }
-                if (rect.getX() < 1) {
-                    movedown = true;
+                if (rect.getX() <= 1) {
+                    rect.moveright = true;
                 }
             }
             timeDisplay();
