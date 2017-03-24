@@ -54,15 +54,19 @@ public class MostBasicJavaFXMove extends Application {
     static Rectangle winscreen = new Rectangle(0, 0, 0, 0);
     static Rectangle losescreen = new Rectangle(0, 0, 0, 0);
     static Hero mrclean;
-    static Text text = new Text(50, 300, "");
+    static Text text = new Text(75, 300, "");
+    static Text timertext = new Text(0, 50, "");
+    static Text endtext = new Text(69, 400, "");
     static Scene scene;
     static Rectangle finishline;
+    static long starttime = -1;
+    static long endtime;
 
     @Override
     public void start(Stage primaryStage) {
 
         Group root = new Group();
-        scene = new Scene(root, 600, 600);
+        scene = new Scene(root, 600, 710);
         primaryStage.setTitle("DATA Con");
         primaryStage.setScene(scene);
         Canvas canvas = new Canvas(BOARDWIDTH, BOARDHEIGHT);
@@ -76,11 +80,11 @@ public class MostBasicJavaFXMove extends Application {
         winscreen = new Rectangle();
         losescreen = new Rectangle();
         int nexty = 100;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 7; i++) {
             BadBlock enemy = new BadBlock(nexty, 50, 25);
             enemy.setFill(Color.BLUE);
             badblockz.add(enemy);
-            nexty += 75;
+            nexty += 80;
         }
         //we have created an animation timer --- the class MUST be overwritten - look below 
         AnimationTimer timer = new MyTimer();
@@ -89,6 +93,9 @@ public class MostBasicJavaFXMove extends Application {
             @Override
             public void handle(KeyEvent event) {
                 String code = event.getCode().toString();
+                if (starttime < 0) {
+                    starttime = System.currentTimeMillis();
+                }
                 //    input.remove( code );
                 if (event.getCode() == KeyCode.RIGHT) { // don't use toString here!!!
                     mrclean.setX(mrclean.getX() + 5);
@@ -133,6 +140,8 @@ public class MostBasicJavaFXMove extends Application {
         root.getChildren().add(winscreen);
         root.getChildren().add(losescreen);
         root.getChildren().add(text);
+        root.getChildren().add(timertext);
+        root.getChildren().add(endtext);
         finishline = new Rectangle(scene.getWidth(), 50, Color.BLACK);
         //finishline.setY(badblockz.get(badblockz.size()-1).getY()+50);
         //finishline.setFill(Color.RED);
@@ -209,10 +218,10 @@ public class MostBasicJavaFXMove extends Application {
             checkBounds(mrclean);
             for (BadBlock rect : badblockz) {
                 if (movedown && rect.getX() < scene.getWidth()) {
-                    rect.setX(rect.getX() + 5);
+                    rect.setX(rect.getX() + 10);
                 }
                 if (!movedown && rect.getX() > 1) {
-                    rect.setX(rect.getX() - 5);
+                    rect.setX(rect.getX() - 10);
                 }
                 if (rect.getX() > scene.getWidth()) {
                     movedown = false;
@@ -221,7 +230,8 @@ public class MostBasicJavaFXMove extends Application {
                     movedown = true;
                 }
             }
-            if (mrclean.getY() + 50 > 570) {
+            timeDisplay();
+            if (mrclean.getY() + 50 > 676) {
                 splashScreen();
             }
             // stop();
@@ -230,28 +240,50 @@ public class MostBasicJavaFXMove extends Application {
             finishline.setX(0);
             finishline.setHeight(50);
             finishline.setWidth(scene.getWidth());
+            timeDisplay();
+
         }
     }
 
+    static void timeDisplay() {
+        if (starttime > 0){
+            long now = System.currentTimeMillis();
+            long time = (now - starttime);
+            timertext.setText("Your time is " + (time/1000.0));
+            timertext.setFont(Font.font("Veranda", 30));
+    }
+    }
+
     static void splashScreen() {
-        winscreen.setWidth(BOARDWIDTH);
-        winscreen.setHeight(BOARDHEIGHT);
+        mrclean.setY(5);
+        winscreen.setWidth(600);
+        winscreen.setHeight(710);
         winscreen.setFill(Color.GREEN);
         finishline.setFill(Color.GREEN);
         text.setFill(Color.WHITE);
-        text.setText("YOU WIN");
+        text.setText("YOU WIN!!");
         text.setFont(Font.font("Veranda", 99));
-
+        timertext.setFill(Color.GREEN);
+        endtext.setFill(Color.BLACK);
+        endtext.setText("Your time was: " + (System.currentTimeMillis() - starttime)/1000.0);
+        endtext.setFont(Font.font("Veranda", 50));
+        
     }
 
     static void splashScreen2() {
-        losescreen.setWidth(BOARDWIDTH);
-        losescreen.setHeight(BOARDHEIGHT);
+        mrclean.setY(5);
+        losescreen.setWidth(600);
+        losescreen.setHeight(710);
         losescreen.setFill(Color.RED);
         finishline.setFill(Color.RED);
         text.setFill(Color.WHITE);
         text.setText("YOU LOSE");
         text.setFont(Font.font("Veranda", 99));
+        timertext.setFill(Color.RED);
+        endtext.setFill(Color.BLACK);
+        endtext.setText("Your time was: " + (System.currentTimeMillis() - starttime)/1000.0);
+        endtext.setFont(Font.font("Veranda", 50));
+        
     }
 
     private void checkBounds(Rectangle mrclean) {
