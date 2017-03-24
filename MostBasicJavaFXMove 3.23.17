@@ -57,6 +57,7 @@ public class MostBasicJavaFXMove extends Application {
     static Text text = new Text(75, 300, "");
     static Text timertext = new Text(0, 50, "");
     static Text endtext = new Text(69, 400, "");
+    static Text titletext = new Text(430, 50, "");
     static Scene scene;
     static Rectangle finishline;
     static long starttime = -1;
@@ -72,6 +73,9 @@ public class MostBasicJavaFXMove extends Application {
         Canvas canvas = new Canvas(BOARDWIDTH, BOARDHEIGHT);
         //Notice gc is not being used yet 
         GraphicsContext gc = canvas.getGraphicsContext2D();
+        titletext.setText("BE PATIENT BUT ALSO BE FAST");
+        titletext.setFont(Font.font("Veranda", 40));
+        titletext.setWrappingWidth(170);
 
         //notice we are creating shape objects 
         // box = new Rectangle(300, 300, 23, 23);
@@ -142,6 +146,7 @@ public class MostBasicJavaFXMove extends Application {
         root.getChildren().add(text);
         root.getChildren().add(timertext);
         root.getChildren().add(endtext);
+        root.getChildren().add(titletext);
         finishline = new Rectangle(scene.getWidth(), 50, Color.BLACK);
         //finishline.setY(badblockz.get(badblockz.size()-1).getY()+50);
         //finishline.setFill(Color.RED);
@@ -248,7 +253,7 @@ public class MostBasicJavaFXMove extends Application {
         if (starttime > 0){
             long now = System.currentTimeMillis();
             long time = (now - starttime);
-            timertext.setText("Your time is " + (time/1000.0));
+            timertext.setText("Your time: " + (time/1000.0));
             timertext.setFont(Font.font("Veranda", 30));
     }
     }
@@ -266,6 +271,7 @@ public class MostBasicJavaFXMove extends Application {
         endtext.setFill(Color.BLACK);
         endtext.setText("Your time was: " + (System.currentTimeMillis() - starttime)/1000.0);
         endtext.setFont(Font.font("Veranda", 50));
+        titletext.setText("");
         
     }
 
@@ -282,7 +288,7 @@ public class MostBasicJavaFXMove extends Application {
         endtext.setFill(Color.BLACK);
         endtext.setText("Your time was: " + (System.currentTimeMillis() - starttime)/1000.0);
         endtext.setFont(Font.font("Veranda", 50));
-        
+        titletext.setText("");
     }
 
     private void checkBounds(Rectangle mrclean) {
