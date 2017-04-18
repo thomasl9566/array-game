@@ -11,34 +11,27 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
 import javafx.stage.Stage;
+
 public class Livesay_2_pacman extends Application {
-    static Pacman pacman;
-    
+
+
     public static void main(String[] args) {
         Application.launch(args);
     }
+
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("pacman");
 
         Group g = new Group();
-        Scene scene = new Scene(g, 250, 250,Color.web("0x0000FF",1.0));
+        Scene scene = new Scene(g, 500, 500, Color.web("0x0000FF", 1.0));
+        Pacman pacman = new Pacman(0, 0);
+        g.getChildren().add(pacman);
 
-        Arc arc = new Arc();
-        arc.setCenterX(50.0f);
-        arc.setCenterY(50.0f);
-        arc.setRadiusX(25.0f);
-        arc.setRadiusY(25.0f);
-        arc.setStartAngle(45.0f);
-        arc.setLength(270.0f);
-        arc.setType(ArcType.ROUND);
-        
-        g.getChildren().add(arc);
-        
         primaryStage.setScene(scene);
         primaryStage.show();
-        
-               scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
                 String code = event.getCode().toString();
@@ -53,25 +46,37 @@ public class Livesay_2_pacman extends Application {
                 }
             }
         });
-        
 
     }
-    
+
     static class Pacman extends Arc {
-            public Pacman(int x, int y) {
+
+        public Pacman(int x, int y) {
+            this.setRadiusX(25.0f);
+            this.setRadiusY(25.0f);
+            this.setStartAngle(45.0f);
+            this.setLength(270.0f);
+            this.setType(ArcType.ROUND);
             this.setCenterY(y);
             this.setCenterX(x);
         }
-        
+
+        public int getX() {
+            return (int) this.getCenterX();
+        }
+
+        public int getY() {
+            return (int) this.getCenterY();
+        }
+
+        void setX(int x) {
+            this.setCenterX(x);
+        }
+
+        void setY(int y) {
+            this.setCenterY(y);
+        }
+
     }
-    
-    public int getX(){
-        return (int) this.getCenterX();
-    }
-    
-    public int getY(){
-        return (int) this.getCenterY();
-    }
-           
-    
+
 }
