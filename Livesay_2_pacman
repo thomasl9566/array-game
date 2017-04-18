@@ -14,7 +14,11 @@ import javafx.stage.Stage;
 
 public class Livesay_2_pacman extends Application {
 
-
+    static boolean moveright;
+    static boolean moveleft;
+    static boolean movedown;
+    static boolean moveup;
+    
     public static void main(String[] args) {
         Application.launch(args);
     }
@@ -26,30 +30,42 @@ public class Livesay_2_pacman extends Application {
         Group g = new Group();
         Scene scene = new Scene(g, 500, 500, Color.web("0x0000FF", 1.0));
         Pacman pacman = new Pacman(0, 0);
+       
         g.getChildren().add(pacman);
 
         primaryStage.setScene(scene);
         primaryStage.show();
-
+        
+        AnimationTimer timer = new MyTimer();
+        
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
                 String code = event.getCode().toString();
                 if (event.getCode() == KeyCode.RIGHT) {
                     pacman.setX(pacman.getX() + 5);
+                    boolean moveright = true;
                 } else if (event.getCode() == KeyCode.LEFT) {
                     pacman.setX(pacman.getX() - 5);
+                    boolean moveleft = true;
                 } else if (event.getCode() == KeyCode.UP) {
                     pacman.setY(pacman.getY() - 5);
+                    boolean moveup = true;
                 } else if (event.getCode() == KeyCode.DOWN) {
                     pacman.setY(pacman.getY() + 5);
+                    boolean movedown = true;
                 }
+
+                
+                
             }
+            
         });
+        
 
     }
 
-    static class Pacman extends Arc {
+    class Pacman extends Arc {
 
         public Pacman(int x, int y) {
             this.setRadiusX(25.0f);
@@ -76,7 +92,41 @@ public class Livesay_2_pacman extends Application {
         void setY(int y) {
             this.setCenterY(y);
         }
+        
+        public void goRight(){
+            this.setX(this.getX() + 5);
+        }
+        
+        public void goLeft(){
+            this.setX(this.getX() - 5);
+        }
+        
+        public void goDown(){
+            this.setY(this.getY() - 5);
+        }
+        
+        public void goUp(){
+            this.setY(this.getY() + 5);
+        }
 
     }
+    
+        private class MyTimer extends AnimationTimer {
+        /// handle is defined by the abstract parent class -- it must be redined 
+        /// this is what happens again and again until stop()
+        @Override
+        public void handle(long now) {
+            // You can look at the key presses here as well -- this is one of many. Try others
+
+            doHandle();
+            /// notice doHandle()  is what happens again and again it's defined below
+
+        }
+
+        public void doHandle() {
+        }
+        
+    }
+        
 
 }
