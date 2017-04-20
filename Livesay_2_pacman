@@ -14,6 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
 import javafx.stage.Stage;
+import javafx.scene.shape.Rectangle;
 
 public class Livesay_2_pacman extends Application {
 
@@ -26,6 +27,9 @@ public class Livesay_2_pacman extends Application {
     static boolean key_left;
     static boolean key_down;
     static boolean key_up;
+    static ArrayList<String> wallz = new ArrayList<String>();
+    static Rectangle wall;
+    static Rectangle wall1;
 
     @Override
     public void start(Stage primaryStage) {
@@ -36,12 +40,15 @@ public class Livesay_2_pacman extends Application {
         primaryStage.setScene(scene);
 
         canvas = new Canvas(1280, 768);
-
+        
         gc = canvas.getGraphicsContext2D();
 
         AnimationTimer timer = new MyTimer();
 
         pacman = new Pacman(100, 100);
+        
+        wall = new Rectangle(10, 10, 10, 10);
+        wall.setFill(Color.RED);
 
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
@@ -71,10 +78,12 @@ public class Livesay_2_pacman extends Application {
                     key_left = false;
                     key_down = true;
                     key_up = false;
+                    
                 }
 
                 if (event.getCode() == KeyCode.DOWN) {
                     key_down = true;
+                    pacman.setStartAngle(315.0f);
                 }
                 if (event.getCode() == KeyCode.UP) {
                     key_up = true;
@@ -93,6 +102,7 @@ public class Livesay_2_pacman extends Application {
 
         root.getChildren().add(canvas);
         root.getChildren().add(pacman);
+        root.getChildren().add(wall);
 
         primaryStage.show();
         timer.start();
@@ -104,21 +114,6 @@ public class Livesay_2_pacman extends Application {
 
     private class MyTimer extends AnimationTimer {
 
-        /*  public void keyPressed(KeyEvent event) {
-
-            if (event.getCode() == KeyCode.DOWN) {
-                key_down = true;
-            }
-            if (event.getCode() == KeyCode.UP) {
-                key_up = true;
-            }
-            if (event.getCode() == KeyCode.RIGHT) {
-                key_right = true;
-            }
-            if (event.getCode() == KeyCode.LEFT) {
-                key_left = true;
-            }
-        }*/
         @Override
         public void handle(long now) {
             /* if (input.contains("LEFT")) {
@@ -180,17 +175,20 @@ public class Livesay_2_pacman extends Application {
         public void goRight() {
             if (this.getCenterX() < canvas.getWidth()) {
                 this.setX(this.getX() + 5);
+                this.setStartAngle(45.0f);
             }
         }
 
         public void goLeft() {
             if (this.getCenterX() > 0) {
                 this.setX(this.getX() - 5);
+                this.setStartAngle(225.0f);
             }
         }
 
         public void goUp() {
             this.setY(this.getY() - 5);
+            this.setStartAngle(135.0f);
         }
 
         public void goDown() {
@@ -198,4 +196,6 @@ public class Livesay_2_pacman extends Application {
         }
 
     }
+    
+    
 }
