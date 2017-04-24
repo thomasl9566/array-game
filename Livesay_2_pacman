@@ -1,21 +1,5 @@
-/*
- * This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+package livesay_2_pacman;
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
- */
-package mostbasicjavafxmove;
-
-import java.util.Random;
 import java.util.ArrayList;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -27,294 +11,233 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Arc;
+import javafx.scene.shape.ArcType;
 import javafx.stage.Stage;
-import javafx.scene.text.Text;
-import javafx.event.ActionEvent;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
-import javafx.event.Event;
-import javafx.scene.Node;
-import javafx.scene.text.*;
 
-/**
- * For more information see:
- * http://stackoverflow.com/questions/21331519/how-to-get-smooth-animation-with-keypress-event-in-javafx
- * http://docs.oracle.com/javafx/2/scenegraph/jfxpub-scenegraph.htm
- * http://stackoverflow.com/questions/15013913/checking-collision-of-shapes-with-javafx
- * https://gamedevelopment.tutsplus.com/tutorials/introduction-to-javafx-for-game-development--cms-23835
- */
-public class MostBasicJavaFXMove extends Application {
+public class Livesay_2_pacman extends Application {
 
-    public static final int BOARDWIDTH = 600;
-    public static final int BOARDHEIGHT = 600;
-    static ArrayList<BadBlock> badblockz = new ArrayList();
+    static GraphicsContext gc;
+    static Group root;
+    static Pacman pacman;
+    static Canvas canvas;
     static ArrayList<String> input = new ArrayList<String>();
-    //static Rectangle rect;
-    static Rectangle box;
-    static Rectangle winscreen = new Rectangle(0, 0, 0, 0);
-    static Rectangle losescreen = new Rectangle(0, 0, 0, 0);
-    static Hero mrclean;
-    static Text text = new Text(75, 300, "");
-    static Text timertext = new Text(0, 50, "");
-    static Text endtext = new Text(69, 400, "");
-    static Text titletext = new Text(430, 50, "");
-    static Scene scene;
-    static Rectangle finishline;
-    static long starttime = -1;
-    static long endtime;
+    static ArrayList<Wall> wallz = new ArrayList<Wall>();
+    static boolean key_right;
+    static boolean key_left;
+    static boolean key_down;
+    static boolean key_up;
+    static Wall wall;
+    
 
     @Override
     public void start(Stage primaryStage) {
 
-        Group root = new Group();
-        scene = new Scene(root, 600, 710);
-        primaryStage.setTitle("DATA Con");
-        primaryStage.setScene(scene);
-        Canvas canvas = new Canvas(BOARDWIDTH, BOARDHEIGHT);
-        //Notice gc is not being used yet 
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        titletext.setText("BE PATIENT BUT ALSO BE FAST");
-        titletext.setFont(Font.font("Veranda", 40));
-        titletext.setWrappingWidth(170);
+        root = new Group();
+        Scene scene = new Scene(root);
 
-        //notice we are creating shape objects 
-        // box = new Rectangle(300, 300, 23, 23);
-        //  box.setFill(Color.PLUM);
-        mrclean = new Hero(300, 50);
-        winscreen = new Rectangle();
-        losescreen = new Rectangle();
-        int nexty = 100;
-        for (int i = 0; i < 7; i++) {
-            BadBlock enemy = new BadBlock(nexty, 50, 25);
-            enemy.setFill(Color.BLUE);
-            badblockz.add(enemy);
-            nexty += 80;
-        }
-        //we have created an animation timer --- the class MUST be overwritten - look below 
+        primaryStage.setScene(scene);
+
+        canvas = new Canvas(1280, 768);
+
+        gc = canvas.getGraphicsContext2D();
+
         AnimationTimer timer = new MyTimer();
+
+        pacman = new Pacman(100, 100);
+        wall = new Wall(100, 100, 100, 100);
+        
+        
 
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
                 String code = event.getCode().toString();
-                if (starttime < 0) {
-                    starttime = System.currentTimeMillis();
-                }
-                //    input.remove( code );
-                if (event.getCode() == KeyCode.RIGHT) { // don't use toString here!!!
-                    mrclean.setX(mrclean.getX() + 5);
-                    mrclean.setFill(Color.CADETBLUE);
-                    checkBounds(mrclean);
+                if (event.getCode() == KeyCode.RIGHT) {
+                    // pacman.setX(pacman.getX() + 5);
+                    if (!checkBounds(pacman)){
+                    key_right = true;
+                    key_left = false;
+                    key_down = false;
+                    key_up = false;
+                    }
+                    
                 } else if (event.getCode() == KeyCode.LEFT) {
-                    mrclean.setX(mrclean.getX() - 5);
-                    mrclean.setFill(Color.RED);
-                    checkBounds(mrclean);
+                    // pacman.setX(pacman.getX() - 5);
+                    if (!checkBounds(pacman)){
+                    key_right = false;
+                    key_left = true;
+                    key_down = false;
+                    key_up = false;
+                    }
                 } else if (event.getCode() == KeyCode.UP) {
-                    mrclean.setY(mrclean.getY() - 5);
-                    mrclean.setFill(Color.GREEN);
-                    checkBounds(mrclean);
+                    // pacman.setY(pacman.getY() - 5);
+                    if (!checkBounds(pacman)){
+                    key_right = false;
+                    key_left = false;
+                    key_down = false;
+                    key_up = true;
+                    }
                 } else if (event.getCode() == KeyCode.DOWN) {
-                    mrclean.setY(mrclean.getY() + 5);
-                    box.setFill(Color.ORANGE);
-                    checkBounds(mrclean);
-                } else if (event.getCode() == KeyCode.SPACE) {
-                    box.setFill(Color.ORANGE);
+                    // pacman.setY(pacman.getY() + 5);
+                    if (!checkBounds(pacman)){
+                    key_right = false;
+                    key_left = false;
+                    key_down = true;
+                    key_up = false;
+                    }
+                    else if(checkBounds(pacman)){
+
+                    }
+
+                    
+
                 }
+
+                if (event.getCode() == KeyCode.DOWN) {
+                    key_down = true;
+                    pacman.setStartAngle(315.0f);
+                }
+                if (event.getCode() == KeyCode.UP) {
+                    key_up = true;
+                }
+                if (event.getCode() == KeyCode.RIGHT) {
+                    key_right = true;
+                }
+                if (event.getCode() == KeyCode.LEFT) {
+                    key_left = true;
+                }
+
             }
         });
 
-        scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.RIGHT || event.getCode() == KeyCode.LEFT) {
-                    // rectangleVelocity.set(0);
-                }
-            }
-        });
+        Group g = new Group();
 
-        //try disabling canvas --- notice the difference 
         root.getChildren().add(canvas);
-
-        //notice we are manually adding the shape objects to the "root" window
-        for (BadBlock b : badblockz) {
-            root.getChildren().add(b);
-        }
-
-        root.getChildren().add(mrclean);
-        root.getChildren().add(winscreen);
-        root.getChildren().add(losescreen);
-        root.getChildren().add(text);
-        root.getChildren().add(timertext);
-        root.getChildren().add(endtext);
-        root.getChildren().add(titletext);
-        finishline = new Rectangle(scene.getWidth(), 50, Color.BLACK);
-        //finishline.setY(badblockz.get(badblockz.size()-1).getY()+50);
-        //finishline.setFill(Color.RED);
-        root.getChildren().add(finishline);
-        timer.start();
+        root.getChildren().add(pacman);
 
         primaryStage.show();
-
+        timer.start();
     }
 
-    /**
-     * @param args the command line arguments
-     *
-     * The same as before main just calls the args described above
-     */
-    ///  vvvvvvvvvvvv   MAIN vvvvvvvvvvv
     public static void main(String[] args) {
-        launch(args);
+        Application.launch(args);
 
     }
 
-    static class Hero extends Rectangle {
-
-        int health = 50;
-
-        public Hero(int x, int y) {
-            this.setY(y);
-            this.setX(x);
-            this.setHeight(33);
-            this.setWidth(33);
-            this.setFill(Color.PLUM);
-        }
-
-    }
-
-    // static class 
-    static class BadBlock extends Rectangle {
-        boolean moveright = true;
-        
-        public BadBlock(int y, int width, int height) {
-
-            int x = new Random().nextInt(MostBasicJavaFXMove.BOARDWIDTH - width);
-            moveright = (new Random().nextInt(2) == 1);
-            
-            this.setX(x);
-            this.setY(y);
-            this.setHeight(height);
-            this.setWidth(width);
-            this.setFill(Color.PLUM);
-            
-        }
-
-    }
-
-    //// ^^^^^^^^^^^  MAIN ^^^^^^^^^^^^^
-    // we create our time here --- to animate 
     private class MyTimer extends AnimationTimer {
-        /// handle is defined by the abstract parent class -- it must be redined 
-        /// this is what happens again and again until stop()
+
         @Override
         public void handle(long now) {
-            // You can look at the key presses here as well -- this is one of many. Try others
-            if (input.contains("LEFT")) {
-                mrclean.setX(mrclean.getX() - 5);
-            }
+            /* if (input.contains("LEFT")) {
+                pacman.setX(pacman.getX() - 4);
 
+            }
+             */
             doHandle();
-            /// notice doHandle()  is what happens again and again it's defined below
+        }
+
+        private void doHandle() {
+            if (key_down) {
+                pacman.setCenterY(pacman.getCenterY() + 5);
+            }
+            if (key_right) {
+                pacman.goRight();
+            }
+            if (key_up) {
+                pacman.goUp();
+            }
+            if (key_left) {
+                pacman.goLeft();
+            }
 
         }
 
-        public void doHandle() {
-            checkBounds(mrclean);
-            for (BadBlock rect : badblockz) {
-                if (rect.moveright && rect.getX() <= scene.getWidth()) {
-                    rect.setX(rect.getX() + 7);
-                }
-                if (!rect.moveright && rect.getX() >= 1) {
-                    rect.setX(rect.getX() - 7);
-                }
-                if (rect.getX() >= scene.getWidth()) {
-                    rect.moveright = false;
-                }
-                if (rect.getX() <= 1) {
-                    rect.moveright = true;
-                }
-            }
-            timeDisplay();
-            if (mrclean.getY() + 50 > 676) {
-                splashScreen();
-            }
-            // stop();
-            // System.out.println("Animation stopped");
-            finishline.setY(scene.getHeight() - 50);
-            finishline.setX(0);
-            finishline.setHeight(50);
-            finishline.setWidth(scene.getWidth());
-            timeDisplay();
+    }
+
+    class Pacman extends Arc {
+
+        public Pacman(int x, int y) {
+            this.setCenterX(400.0f);
+            this.setCenterY(400.0f);
+            this.setRadiusX(25.0f);
+            this.setRadiusY(25.0f);
+            this.setStartAngle(45.0f);
+            this.setLength(270.0f);
+            this.setType(ArcType.ROUND);
+            this.setFill(Color.GOLD);
 
         }
+
+        void setX(int x) {
+            this.setCenterX(x);
+        }
+
+        void setY(int y) {
+            this.setCenterY(y);
+        }
+
+        public int getY() {
+            return (int) this.getCenterY();
+        }
+
+        public int getX() {
+            return (int) this.getCenterX();
+        }
+
+        public void goRight() {
+            if (this.getCenterX() < canvas.getWidth()) {
+                this.setX(this.getX() + 5);
+                this.setStartAngle(45.0f);
+            }
+        }
+
+        public void goLeft() {
+            if (this.getCenterX() > 0) {
+                this.setX(this.getX() - 5);
+                this.setStartAngle(225.0f);
+            }
+        }
+
+        public void goUp() {
+            this.setY(this.getY() - 5);
+            this.setStartAngle(135.0f);
+        }
+
+        public void goDown() {
+            this.setX(this.getX() + 5);
+        }
+
     }
 
-    static void timeDisplay() {
-        if (starttime > 0){
-            long now = System.currentTimeMillis();
-            long time = (now - starttime);
-            timertext.setText("Your time: " + (time/1000.0));
-            timertext.setFont(Font.font("Veranda", 30));
-    }
-    }
+    class Wall extends Rectangle {
 
-    static void splashScreen() {
-        mrclean.setY(5);
-        winscreen.setWidth(600);
-        winscreen.setHeight(710);
-        winscreen.setFill(Color.GREEN);
-        finishline.setFill(Color.GREEN);
-        text.setFill(Color.WHITE);
-        text.setText("YOU WIN!!");
-        text.setFont(Font.font("Veranda", 99));
-        timertext.setFill(Color.GREEN);
-        endtext.setFill(Color.BLACK);
-        endtext.setText("Your time was: " + (System.currentTimeMillis() - starttime)/1000.0);
-        endtext.setFont(Font.font("Veranda", 50));
-        titletext.setText("");
-        
+        public Wall(int x, int y, int w, int h) {
+            this.setFill(Color.GOLD);
+            this.setX(x);
+            this.setY(y);
+            this.setWidth(w);
+            this.setHeight(h);
+            this.setHeight(200);
+            this.setWidth(220);
+            root.getChildren().add(this);
+            wallz.add(this);
+        }
     }
-
-    static void splashScreen2() {
-        mrclean.setY(5);
-        losescreen.setWidth(600);
-        losescreen.setHeight(710);
-        losescreen.setFill(Color.RED);
-        finishline.setFill(Color.RED);
-        text.setFill(Color.WHITE);
-        text.setText("YOU LOSE");
-        text.setFont(Font.font("Veranda", 99));
-        timertext.setFill(Color.RED);
-        endtext.setFill(Color.BLACK);
-        endtext.setText("Your time was: " + (System.currentTimeMillis() - starttime)/1000.0);
-        endtext.setFont(Font.font("Veranda", 50));
-        titletext.setText("");
-    }
-
-    private void checkBounds(Rectangle mrclean) {
-        // checkBounds is called in two different locations --- it's really only necessary in the animation dohandle
-        // experiment - check the differences
-
+    
+    public boolean checkBounds(Shape s){
         boolean collisionDetected = false;
-
-        // notice the difference in how an ArrayList iterates through items 
-        for (Rectangle badblock : badblockz) {
-            if (mrclean.getBoundsInParent().intersects(badblock.getBoundsInParent())) {
-                collisionDetected = true;
-                badblock.setFill(Color.RED);
-                splashScreen2();
-            } else {
-                badblock.setFill(Color.BLUE);
-            }
+        
+        for (Wall w: wallz){
+             if(s.getBoundsInParent().intersects(w. getBoundsInParent())){
+            return true;
         }
-        if (collisionDetected) {
-            mrclean.setFill(Color.RED);
-        } else {
-            mrclean.setFill(Color.ORANGE);
         }
-        //       if (mrclean.getY() > mrclean.getParent().getBoundsInLocal().getHeight()) {
-        //          System.exit(0);
-        //      }
+        return false;
+        
     }
 
 }
+
