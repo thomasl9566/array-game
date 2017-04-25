@@ -21,15 +21,17 @@ public class Livesay_2_pacman extends Application {
 
     static GraphicsContext gc;
     static Group root;
-    static Pacman pacman;
+    static Pacman pacman; //WHERE PACMAN IS MADE
     static Canvas canvas;
     static ArrayList<String> input = new ArrayList<String>();
     static ArrayList<Wall> wallz = new ArrayList<Wall>();
+    static ArrayList<Ghost> ghosts = new ArrayList<Ghost>();
     static boolean key_right;
     static boolean key_left;
     static boolean key_down;
     static boolean key_up;
-    static Wall wall;
+    static Wall wall1; //WHERE WALL IS MADE
+    static Ghost ghost1;
 
     @Override
     public void start(Stage primaryStage) {
@@ -46,13 +48,13 @@ public class Livesay_2_pacman extends Application {
         AnimationTimer timer = new MyTimer();
 
         pacman = new Pacman(100, 100);
-        wall = new Wall(100, 100, 100, 100);
+        wall1 = new Wall(100, 100, 100, 100);
+        //ghost1 = new Ghost(20, 20, 20, 20);
 
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                
-                
+
                 key_right = (event.getCode() == KeyCode.RIGHT);
                 key_up = (event.getCode() == KeyCode.UP);
                 key_down = (event.getCode() == KeyCode.DOWN);
@@ -75,7 +77,7 @@ public class Livesay_2_pacman extends Application {
 
     }
 
-    private class MyTimer extends AnimationTimer {
+    private class MyTimer extends AnimationTimer { //THIS CODE RUNS OVER AND OVER
 
         @Override
         public void handle(long now) {
@@ -136,7 +138,7 @@ public class Livesay_2_pacman extends Application {
             return (int) this.getCenterX();
         }
 
-        public void goRight() {
+        public void goRight() { //THESE TYPES OF METHODS MAKE PACMAN MOVE
             this.setStartAngle(45.0f);
             if (this.getCenterX() > canvas.getWidth()) {
                 this.setX(0);
@@ -144,7 +146,7 @@ public class Livesay_2_pacman extends Application {
             int amount = 5;
             if (checkBounds(this)) {
                 amount = -5;
-                this.setX(this.getX() - 100);
+                this.setX(this.getX() - 50);
             }
             this.setX(this.getX() + amount);
         }
@@ -158,7 +160,7 @@ public class Livesay_2_pacman extends Application {
             int amount = -5;
             if (checkBounds(this)) {
                 amount = 5;
-                this.setX(this.getX() + 300);
+                this.setX(this.getX() + 50);
             }
             this.setX(this.getX() + amount);
 
@@ -173,7 +175,7 @@ public class Livesay_2_pacman extends Application {
             int amount = -5;
             if (checkBounds(this)) {
                 amount = 5;
-                this.setY(this.getY() + 100);
+                this.setY(this.getY() + 50);
             }
             this.setY(this.getY() + amount);
 
@@ -188,7 +190,7 @@ public class Livesay_2_pacman extends Application {
             int amount = 5;
             if (checkBounds(this)) {
                 amount = -5;
-                this.setY(this.getY() - 100);
+                this.setY(this.getY() - 50);
             }
             this.setY(this.getY() + amount);
 
@@ -199,7 +201,7 @@ public class Livesay_2_pacman extends Application {
     class Wall extends Rectangle {
 
         public Wall(int x, int y, int w, int h) {
-            this.setFill(Color.GOLD);
+            this.setFill(Color.BLACK);
             this.setX(x);
             this.setY(y);
             this.setWidth(w);
@@ -214,12 +216,23 @@ public class Livesay_2_pacman extends Application {
     public boolean checkBounds(Shape s) {
 
         for (Wall w : wallz) {
-            if (s.getBoundsInParent().intersects(w.getBoundsInParent())) {
+            if (s.getBoundsInParent().intersects(w.getBoundsInParent())) { //WHERE INTERSECTION ARE DETECTED
                 return true;
             }
         }
         return false;
 
+    }
+
+    class Ghost extends Rectangle {
+
+        public Ghost(int x, int y) {
+            this.setX(x);
+            this.setY(y);
+            this.setHeight(25);
+            this.setWidth(25);
+            ghosts.add(this);
+        }
     }
 
 }
