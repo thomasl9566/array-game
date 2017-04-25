@@ -30,7 +30,6 @@ public class Livesay_2_pacman extends Application {
     static boolean key_down;
     static boolean key_up;
     static Wall wall;
-    
 
     @Override
     public void start(Stage primaryStage) {
@@ -48,67 +47,16 @@ public class Livesay_2_pacman extends Application {
 
         pacman = new Pacman(100, 100);
         wall = new Wall(100, 100, 100, 100);
-        
-        
 
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                String code = event.getCode().toString();
-                if (event.getCode() == KeyCode.RIGHT) {
-                    // pacman.setX(pacman.getX() + 5);
-                    if (!checkBounds(pacman)){
-                    key_right = true;
-                    key_left = false;
-                    key_down = false;
-                    key_up = false;
-                    }
-                    
-                } else if (event.getCode() == KeyCode.LEFT) {
-                    // pacman.setX(pacman.getX() - 5);
-                    if (!checkBounds(pacman)){
-                    key_right = false;
-                    key_left = true;
-                    key_down = false;
-                    key_up = false;
-                    }
-                } else if (event.getCode() == KeyCode.UP) {
-                    // pacman.setY(pacman.getY() - 5);
-                    if (!checkBounds(pacman)){
-                    key_right = false;
-                    key_left = false;
-                    key_down = false;
-                    key_up = true;
-                    }
-                } else if (event.getCode() == KeyCode.DOWN) {
-                    // pacman.setY(pacman.getY() + 5);
-                    if (!checkBounds(pacman)){
-                    key_right = false;
-                    key_left = false;
-                    key_down = true;
-                    key_up = false;
-                    }
-                    else if(checkBounds(pacman)){
-
-                    }
-
-                    
-
-                }
-
-                if (event.getCode() == KeyCode.DOWN) {
-                    key_down = true;
-                    pacman.setStartAngle(315.0f);
-                }
-                if (event.getCode() == KeyCode.UP) {
-                    key_up = true;
-                }
-                if (event.getCode() == KeyCode.RIGHT) {
-                    key_right = true;
-                }
-                if (event.getCode() == KeyCode.LEFT) {
-                    key_left = true;
-                }
+                
+                
+                key_right = (event.getCode() == KeyCode.RIGHT);
+                key_up = (event.getCode() == KeyCode.UP);
+                key_down = (event.getCode() == KeyCode.DOWN);
+                key_left = (event.getCode() == KeyCode.LEFT);
 
             }
         });
@@ -141,7 +89,8 @@ public class Livesay_2_pacman extends Application {
 
         private void doHandle() {
             if (key_down) {
-                pacman.setCenterY(pacman.getCenterY() + 5);
+                pacman.goDown();
+
             }
             if (key_right) {
                 pacman.goRight();
@@ -188,26 +137,61 @@ public class Livesay_2_pacman extends Application {
         }
 
         public void goRight() {
-            if (this.getCenterX() < canvas.getWidth()) {
-                this.setX(this.getX() + 5);
-                this.setStartAngle(45.0f);
+            this.setStartAngle(45.0f);
+            if (this.getCenterX() > canvas.getWidth()) {
+                this.setX(0);
             }
+            int amount = 5;
+            if (checkBounds(this)) {
+                amount = -5;
+                this.setX(this.getX() - 100);
+            }
+            this.setX(this.getX() + amount);
         }
 
         public void goLeft() {
-            if (this.getCenterX() > 0) {
-                this.setX(this.getX() - 5);
-                this.setStartAngle(225.0f);
+            this.setStartAngle(225.0f);
+            if (this.getCenterX() < 0) {
+                this.setX((int) canvas.getWidth());
+
             }
+            int amount = -5;
+            if (checkBounds(this)) {
+                amount = 5;
+                this.setX(this.getX() + 300);
+            }
+            this.setX(this.getX() + amount);
+
         }
 
         public void goUp() {
-            this.setY(this.getY() - 5);
             this.setStartAngle(135.0f);
+            if (this.getCenterY() < 0) {
+                this.setY((int) canvas.getHeight());
+
+            }
+            int amount = -5;
+            if (checkBounds(this)) {
+                amount = 5;
+                this.setY(this.getY() + 100);
+            }
+            this.setY(this.getY() + amount);
+
         }
 
         public void goDown() {
-            this.setX(this.getX() + 5);
+            pacman.setStartAngle(315.0f);
+            if (this.getCenterY() > canvas.getHeight()) {
+                this.setY(0);
+
+            }
+            int amount = 5;
+            if (checkBounds(this)) {
+                amount = -5;
+                this.setY(this.getY() - 100);
+            }
+            this.setY(this.getY() + amount);
+
         }
 
     }
@@ -226,18 +210,16 @@ public class Livesay_2_pacman extends Application {
             wallz.add(this);
         }
     }
-    
-    public boolean checkBounds(Shape s){
-        boolean collisionDetected = false;
-        
-        for (Wall w: wallz){
-             if(s.getBoundsInParent().intersects(w. getBoundsInParent())){
-            return true;
-        }
+
+    public boolean checkBounds(Shape s) {
+
+        for (Wall w : wallz) {
+            if (s.getBoundsInParent().intersects(w.getBoundsInParent())) {
+                return true;
+            }
         }
         return false;
-        
+
     }
 
 }
-
