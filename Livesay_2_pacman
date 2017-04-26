@@ -31,6 +31,15 @@ public class Livesay_2_pacman extends Application {
     static boolean key_down;
     static boolean key_up;
     static Wall wall1; //WHERE WALL IS MADE
+    static Wall wall2;
+    static Wall wall3;
+    static Wall wall4;
+    static Wall wall5;
+    static Wall wall6;
+    static Wall wall7;
+    static Wall wall8;
+    static Wall wall9;
+    
     static Ghost ghost1;
 
     @Override
@@ -41,15 +50,24 @@ public class Livesay_2_pacman extends Application {
 
         primaryStage.setScene(scene);
 
-        canvas = new Canvas(1280, 768);
+        canvas = new Canvas(1200, 800);
 
         gc = canvas.getGraphicsContext2D();
 
         AnimationTimer timer = new MyTimer();
 
         pacman = new Pacman(100, 100);
-        wall1 = new Wall(100, 100, 100, 100);
-        //ghost1 = new Ghost(20, 20, 20, 20);
+        wall1 = new Wall(150, 150, 200, 225);
+        wall2 = new Wall(0, 0, 500, 30);
+        wall3 = new Wall(700, 0, 500, 30);
+        wall4 = new Wall(0, 800, 500, 30);
+        wall5 = new Wall(700, 800, 500, 30);
+        wall6 = new Wall(0, 150, 30, 550);
+        wall7 = new Wall(150, 475, 200, 225);
+        wall8 = new Wall(1170, 150, 30, 550);
+        wall9 = new Wall(600, 475, 200, 225);
+        
+        ghost1 = new Ghost(800, 400);
 
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
@@ -67,6 +85,7 @@ public class Livesay_2_pacman extends Application {
 
         root.getChildren().add(canvas);
         root.getChildren().add(pacman);
+        root.getChildren().add(ghost1);
 
         primaryStage.show();
         timer.start();
@@ -143,10 +162,10 @@ public class Livesay_2_pacman extends Application {
             if (this.getCenterX() > canvas.getWidth()) {
                 this.setX(0);
             }
-            int amount = 5;
+            int amount = 4;
             if (checkBounds(this)) {
-                amount = -5;
-                this.setX(this.getX() - 50);
+                //amount = -5;
+                this.setX(this.getX() - 80);
             }
             this.setX(this.getX() + amount);
         }
@@ -157,10 +176,10 @@ public class Livesay_2_pacman extends Application {
                 this.setX((int) canvas.getWidth());
 
             }
-            int amount = -5;
+            int amount = -4;
             if (checkBounds(this)) {
-                amount = 5;
-                this.setX(this.getX() + 50);
+                //amount = 5;
+                this.setX(this.getX() + 80);
             }
             this.setX(this.getX() + amount);
 
@@ -172,10 +191,10 @@ public class Livesay_2_pacman extends Application {
                 this.setY((int) canvas.getHeight());
 
             }
-            int amount = -5;
+            int amount = -4;
             if (checkBounds(this)) {
-                amount = 5;
-                this.setY(this.getY() + 50);
+                //amount = 5;
+                this.setY(this.getY() + 80);
             }
             this.setY(this.getY() + amount);
 
@@ -187,10 +206,10 @@ public class Livesay_2_pacman extends Application {
                 this.setY(0);
 
             }
-            int amount = 5;
+            int amount = 4;
             if (checkBounds(this)) {
-                amount = -5;
-                this.setY(this.getY() - 50);
+                //amount = -5;
+                this.setY(this.getY() - 80);
             }
             this.setY(this.getY() + amount);
 
@@ -206,8 +225,6 @@ public class Livesay_2_pacman extends Application {
             this.setY(y);
             this.setWidth(w);
             this.setHeight(h);
-            this.setHeight(200);
-            this.setWidth(220);
             root.getChildren().add(this);
             wallz.add(this);
         }
@@ -227,10 +244,11 @@ public class Livesay_2_pacman extends Application {
     class Ghost extends Rectangle {
 
         public Ghost(int x, int y) {
+            this.setFill(Color.AQUAMARINE);
             this.setX(x);
             this.setY(y);
-            this.setHeight(25);
-            this.setWidth(25);
+            this.setHeight(170);
+            this.setWidth(100);
             ghosts.add(this);
         }
     }
