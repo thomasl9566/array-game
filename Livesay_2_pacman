@@ -65,7 +65,7 @@ public class Livesay_2_pacman extends Application {
         wall6 = new Wall(0, 150, 30, 550);
         wall7 = new Wall(150, 475, 200, 225);
         wall8 = new Wall(1170, 150, 30, 550);
-        wall9 = new Wall(600, 475, 200, 225);
+        wall9 = new Wall(850, 475, 200, 225);
         
         ghost1 = new Ghost(800, 400);
 
