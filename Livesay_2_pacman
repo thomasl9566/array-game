@@ -39,8 +39,14 @@ public class Livesay_2_pacman extends Application {
     static Wall wall7;
     static Wall wall8;
     static Wall wall9;
+    static Wall wall10;
+    static Wall wall11;
+    static Wall wall12;
+    static Wall wall13;
+    static Wall wall14;
+    static Wall wall15;
     
-    static Ghost ghost1;
+  //  static Ghost ghost1;
 
     @Override
     public void start(Stage primaryStage) {
@@ -57,17 +63,24 @@ public class Livesay_2_pacman extends Application {
         AnimationTimer timer = new MyTimer();
 
         pacman = new Pacman(100, 100);
-        wall1 = new Wall(150, 150, 200, 225);
-        wall2 = new Wall(0, 0, 500, 30);
-        wall3 = new Wall(700, 0, 500, 30);
-        wall4 = new Wall(0, 800, 500, 30);
-        wall5 = new Wall(700, 800, 500, 30);
-        wall6 = new Wall(0, 150, 30, 550);
-        wall7 = new Wall(150, 475, 200, 225);
-        wall8 = new Wall(1170, 150, 30, 550);
-        wall9 = new Wall(850, 475, 200, 225);
+        wall1 = new Wall(150, 150, 285, 175);   //
+        wall2 = new Wall(0, 0, 300, 30);    //slim
+        wall3 = new Wall(900, 0, 300, 30);  //slim
+        wall4 = new Wall(0, 770, 300, 30);  //slim
+        wall5 = new Wall(900, 770, 300, 30);    //slim
+        wall7 = new Wall(150, 475, 285, 175);   //
+        wall6 = new Wall(0, 0, 30, 250);
+        wall8 = new Wall(1170, 0, 30, 250);
+        wall9 = new Wall(765, 475, 285, 175);   //
+        wall10 = new Wall(765, 150, 285, 175);  //
+        wall11 = new Wall(450, 0, 300, 30);      //nub
+        wall12 = new Wall(450, 770, 300, 30);    //nub
+        wall13 = new Wall(0, 550, 30, 250);
+        wall14 = new Wall(1170, 550, 30, 250);
+        wall15 = new Wall(575, 150, 30, 500);  //middle
         
-        ghost1 = new Ghost(800, 400);
+        
+     //   ghost1 = new Ghost(800, 400);
 
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
@@ -85,7 +98,7 @@ public class Livesay_2_pacman extends Application {
 
         root.getChildren().add(canvas);
         root.getChildren().add(pacman);
-        root.getChildren().add(ghost1);
+    //    root.getChildren().add(ghost1);
 
         primaryStage.show();
         timer.start();
@@ -250,6 +263,7 @@ public class Livesay_2_pacman extends Application {
             this.setHeight(170);
             this.setWidth(100);
             ghosts.add(this);
+            
         }
     }
 
