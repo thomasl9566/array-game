@@ -26,10 +26,12 @@ public class Livesay_2_pacman extends Application {
     static ArrayList<String> input = new ArrayList<String>();
     static ArrayList<Wall> wallz = new ArrayList<Wall>();
     static ArrayList<Ghost> ghosts = new ArrayList<Ghost>();
+    static ArrayList<Pellet> pellets = new ArrayList<Pellet>();
     static boolean key_right;
     static boolean key_left;
     static boolean key_down;
     static boolean key_up;
+    static Pellet pellet1;
     static Wall wall1; //WHERE WALL IS MADE
     static Wall wall2;
     static Wall wall3;
@@ -45,9 +47,8 @@ public class Livesay_2_pacman extends Application {
     static Wall wall13;
     static Wall wall14;
     static Wall wall15;
-    
-  //  static Ghost ghost1;
 
+    //  static Ghost ghost1;
     @Override
     public void start(Stage primaryStage) {
 
@@ -63,6 +64,7 @@ public class Livesay_2_pacman extends Application {
         AnimationTimer timer = new MyTimer();
 
         pacman = new Pacman(100, 100);
+        pellet1 = new Pellet(85, 200, 13, 13);
         wall1 = new Wall(150, 150, 285, 175);   //
         wall2 = new Wall(0, 0, 300, 30);    //slim
         wall3 = new Wall(900, 0, 300, 30);  //slim
@@ -78,10 +80,8 @@ public class Livesay_2_pacman extends Application {
         wall13 = new Wall(0, 550, 30, 250);
         wall14 = new Wall(1170, 550, 30, 250);
         wall15 = new Wall(575, 150, 30, 500);  //middle
-        
-        
-     //   ghost1 = new Ghost(800, 400);
 
+        //   ghost1 = new Ghost(800, 400);
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
@@ -98,7 +98,7 @@ public class Livesay_2_pacman extends Application {
 
         root.getChildren().add(canvas);
         root.getChildren().add(pacman);
-    //    root.getChildren().add(ghost1);
+        //    root.getChildren().add(ghost1);
 
         primaryStage.show();
         timer.start();
@@ -181,6 +181,9 @@ public class Livesay_2_pacman extends Application {
                 this.setX(this.getX() - 80);
             }
             this.setX(this.getX() + amount);
+            if (pelletCollision(this)){
+                
+            }
         }
 
         public void goLeft() {
@@ -263,8 +266,33 @@ public class Livesay_2_pacman extends Application {
             this.setHeight(170);
             this.setWidth(100);
             ghosts.add(this);
-            
+
         }
     }
 
+    class Pellet extends Rectangle {
+
+        public Pellet(int x, int y, int w, int h) {
+            this.setX(x);
+            this.setY(y);
+            this.setWidth(w);
+            this.setHeight(h);
+            this.setFill(Color.BLUE);
+            pellets.add(this);
+            root.getChildren().add(this);
+        }
+
+    }
+    public boolean pelletCollision (Shape t){
+        
+        for (Pellet p : pellets){
+        if (t.getBoundsInParent().intersects(p.getBoundsInParent())){
+            return true;
+        }
+            
+        }
+    return false;
+    }
 }
+
+
