@@ -32,6 +32,50 @@ public class Livesay_2_pacman extends Application {
     static boolean key_down;
     static boolean key_up;
     static Pellet pellet1;
+    static Pellet pellet2;
+    static Pellet pellet3;
+    static Pellet pellet4;
+    static Pellet pellet5;
+    static Pellet pellet6;
+    static Pellet pellet7;
+    static Pellet pellet8;
+    static Pellet pellet9;
+    static Pellet pellet10;
+    static Pellet pellet11;
+    static Pellet pellet12;
+    static Pellet pellet13;
+    static Pellet pellet14;
+    static Pellet pellet15;
+    static Pellet pellet16;
+    static Pellet pellet17;
+    static Pellet pellet18;
+    static Pellet pellet19;
+    static Pellet pellet20;
+    static Pellet pellet21;
+    static Pellet pellet22;
+    static Pellet pellet23;
+    static Pellet pellet24;
+    static Pellet pellet25;
+    static Pellet pellet26;
+    static Pellet pellet27;
+    static Pellet pellet28;
+    static Pellet pellet29;
+    static Pellet pellet30;
+    static Pellet pellet31;
+    static Pellet pellet32;
+    static Pellet pellet33;
+    static Pellet pellet34;
+    static Pellet pellet35;
+    static Pellet pellet36;
+    static Pellet pellet37;
+    static Pellet pellet38;
+    static Pellet pellet39;
+    static Pellet pellet40;
+    static Pellet pellet41;
+
+
+    static Pellet pellet100;
+
     static Wall wall1; //WHERE WALL IS MADE
     static Wall wall2;
     static Wall wall3;
@@ -64,7 +108,50 @@ public class Livesay_2_pacman extends Application {
         AnimationTimer timer = new MyTimer();
 
         pacman = new Pacman(100, 100);
-        pellet1 = new Pellet(85, 200, 13, 13);
+
+        pellet1 = new Pellet(85, 80, 13, 13);
+        pellet2 = new Pellet(85, 160, 13, 13);
+        pellet3 = new Pellet(85, 240, 13, 13);
+        pellet4 = new Pellet(85, 320, 13, 13);
+        pellet5 = new Pellet(85, 400, 13, 13);
+        pellet6 = new Pellet(85, 480, 13, 13);
+        pellet7 = new Pellet(85, 560, 13, 13);
+        pellet8 = new Pellet(85, 633, 13, 13);
+        pellet9 = new Pellet(165, 80, 13, 13);
+        pellet10 = new Pellet(245, 80, 13, 13);
+        pellet11 = new Pellet(325, 80, 13, 13);
+        pellet12 = new Pellet(405, 80, 13, 13);
+        pellet13 = new Pellet(485, 80, 13, 13);
+        pellet14 = new Pellet(565, 80, 13, 13);
+        pellet15 = new Pellet(645, 80, 13, 13);
+        pellet16 = new Pellet(725, 80, 13, 13);
+        pellet17 = new Pellet(805, 80, 13, 13);
+        pellet18 = new Pellet(885, 80, 13, 13);
+        pellet19 = new Pellet(965, 80, 13, 13);
+        pellet20 = new Pellet(1035, 80, 13, 13);
+        pellet21 = new Pellet(1100, 80, 13, 13);
+        pellet22 = new Pellet(1100, 160, 13, 13);
+        pellet23 = new Pellet(1100, 240, 13, 13);
+        pellet24 = new Pellet(1100, 320, 13, 13);
+        pellet25 = new Pellet(1100, 400, 13, 13);
+        pellet26 = new Pellet(1100, 480, 13, 13);
+        pellet27 = new Pellet(1100, 560, 13, 13);
+        pellet28 = new Pellet(1100, 633, 13, 13);
+        pellet30 = new Pellet(1100, 705, 13, 13);
+        pellet31 = new Pellet(165, 705, 13, 13);
+        pellet32 = new Pellet(245, 705, 13, 13);
+        pellet33 = new Pellet(325, 705, 13, 13);
+        pellet34 = new Pellet(405, 705, 13, 13);
+        pellet35 = new Pellet(485, 705, 13, 13);
+        pellet36 = new Pellet(565, 705, 13, 13);
+        pellet37 = new Pellet(645, 705, 13, 13);
+        pellet38 = new Pellet(725, 705, 13, 13);
+        pellet39 = new Pellet(805, 705, 13, 13);
+        pellet40 = new Pellet(885, 705, 13, 13);
+        pellet41 = new Pellet(965, 705, 13, 13);
+
+        pellet100 = new Pellet(85, 705, 13, 13);
+
         wall1 = new Wall(150, 150, 285, 175);   //
         wall2 = new Wall(0, 0, 300, 30);    //slim
         wall3 = new Wall(900, 0, 300, 30);  //slim
@@ -181,8 +268,8 @@ public class Livesay_2_pacman extends Application {
                 this.setX(this.getX() - 80);
             }
             this.setX(this.getX() + amount);
-            if (pelletCollision(this)){
-                
+            if (pelletCollision(this)) {
+
             }
         }
 
@@ -283,16 +370,15 @@ public class Livesay_2_pacman extends Application {
         }
 
     }
-    public boolean pelletCollision (Shape t){
-        
-        for (Pellet p : pellets){
-        if (t.getBoundsInParent().intersects(p.getBoundsInParent())){
-            return true;
+
+    public boolean pelletCollision(Shape t) {
+
+        for (Pellet p : pellets) {
+            if (t.getBoundsInParent().intersects(p.getBoundsInParent())) {
+                return true;
+            }
+
         }
-            
-        }
-    return false;
+        return false;
     }
 }
-
-
