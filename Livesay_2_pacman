@@ -72,7 +72,31 @@ public class Livesay_2_pacman extends Application {
     static Pellet pellet39;
     static Pellet pellet40;
     static Pellet pellet41;
-
+    static Pellet pellet42;
+    static Pellet pellet43;
+    static Pellet pellet44;
+    static Pellet pellet45;
+    static Pellet pellet46;
+    static Pellet pellet47;
+    static Pellet pellet48;
+    static Pellet pellet49;
+    static Pellet pellet50;
+    static Pellet pellet51;
+    static Pellet pellet52;
+    static Pellet pellet53;
+    static Pellet pellet54;
+    static Pellet pellet55;
+    static Pellet pellet56;
+    static Pellet pellet57;
+    static Pellet pellet58;
+    static Pellet pellet59;
+    static Pellet pellet60;
+    static Pellet pellet61;
+    static Pellet pellet62;
+    static Pellet pellet63;
+    static Pellet pellet64;
+    static Pellet pellet65;
+    static Pellet pellet66;
 
     static Pellet pellet100;
 
@@ -149,6 +173,31 @@ public class Livesay_2_pacman extends Application {
         pellet39 = new Pellet(805, 705, 13, 13);
         pellet40 = new Pellet(885, 705, 13, 13);
         pellet41 = new Pellet(965, 705, 13, 13);
+        pellet42 = new Pellet(1035, 705, 13, 13);
+        pellet43 = new Pellet(680, 640, 13, 13);
+        pellet44 = new Pellet(680, 560, 13, 13);
+        pellet45 = new Pellet(680, 480, 13, 13);
+        pellet46 = new Pellet(680, 400, 13, 13);
+        pellet47 = new Pellet(680, 320, 13, 13);
+        pellet48 = new Pellet(680, 240, 13, 13);
+        pellet49 = new Pellet(680, 160, 13, 13);
+        pellet50 = new Pellet(500, 240, 13, 13);
+        pellet51 = new Pellet(500, 640, 13, 13);
+        pellet52 = new Pellet(500, 560, 13, 13);
+        pellet53 = new Pellet(500, 480, 13, 13);
+        pellet54 = new Pellet(500, 400, 13, 13);
+        pellet55 = new Pellet(500, 320, 13, 13);
+        pellet56 = new Pellet(500, 160, 13, 13);
+        pellet57 = new Pellet(165, 400, 13, 13);
+        pellet58 = new Pellet(250, 400, 13, 13);
+        pellet59 = new Pellet(335, 400, 13, 13);
+        pellet60 = new Pellet(420, 400, 13, 13);
+        pellet61 = new Pellet(770, 400, 13, 13);
+        pellet62 = new Pellet(850, 400, 13, 13);
+        pellet63 = new Pellet(935, 400, 13, 13);
+        pellet64 = new Pellet(1015, 400, 13, 13);
+        pellet65 = new Pellet(370, 780, 13, 13);
+        pellet66 = new Pellet(700, 780, 13, 60);
 
         pellet100 = new Pellet(85, 705, 13, 13);
 
