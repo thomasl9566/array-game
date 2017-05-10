@@ -27,6 +27,7 @@ public class Livesay_2_pacman extends Application {
     static ArrayList<Wall> wallz = new ArrayList<Wall>();
     static ArrayList<Ghost> ghosts = new ArrayList<Ghost>();
     static ArrayList<Pellet> pellets = new ArrayList<Pellet>();
+    static ArrayList<Pacman> pacmans = new ArrayList<Pacman>();
     static boolean key_right;
     static boolean key_left;
     static boolean key_down;
@@ -97,6 +98,10 @@ public class Livesay_2_pacman extends Application {
     static Pellet pellet64;
     static Pellet pellet65;
     static Pellet pellet66;
+    static Pellet pellet67;
+    static Pellet pellet68;
+    static Pellet pellet69;
+    static Pellet pellet70;
 
     static Pellet pellet100;
 
@@ -197,7 +202,11 @@ public class Livesay_2_pacman extends Application {
         pellet63 = new Pellet(935, 400, 13, 13);
         pellet64 = new Pellet(1015, 400, 13, 13);
         pellet65 = new Pellet(370, 780, 13, 13);
-        pellet66 = new Pellet(700, 780, 13, 60);
+        pellet66 = new Pellet(820, 780, 13, 13);
+        pellet67 = new Pellet(370, 0, 13, 13);
+        pellet68 = new Pellet(820, 0, 13, 13);
+        pellet69 = new Pellet(8, 400, 13, 13);
+        pellet70 = new Pellet(1179, 400, 13, 13);
 
         pellet100 = new Pellet(85, 705, 13, 13);
 
@@ -287,6 +296,8 @@ public class Livesay_2_pacman extends Application {
             this.setLength(270.0f);
             this.setType(ArcType.ROUND);
             this.setFill(Color.GOLD);
+            pacmans.add(this);
+            root.getChildren().add(this);
 
         }
 
@@ -317,9 +328,6 @@ public class Livesay_2_pacman extends Application {
                 this.setX(this.getX() - 80);
             }
             this.setX(this.getX() + amount);
-            if (pelletCollision(this)) {
-
-            }
         }
 
         public void goLeft() {
@@ -416,18 +424,23 @@ public class Livesay_2_pacman extends Application {
             this.setFill(Color.BLUE);
             pellets.add(this);
             root.getChildren().add(this);
+            if (pelletCollision(this)) {
+                this.setFill(Color.WHITE);
+
+            }
         }
 
     }
 
-    public boolean pelletCollision(Shape t) {
+    public boolean pelletCollision(Shape p) {
 
-        for (Pellet p : pellets) {
-            if (t.getBoundsInParent().intersects(p.getBoundsInParent())) {
+        for (Pacman a : pacmans) {
+            if (a.getBoundsInParent().intersects(p.getBoundsInParent())) {
                 return true;
             }
 
         }
         return false;
     }
+
 }
