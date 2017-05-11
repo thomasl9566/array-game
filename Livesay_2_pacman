@@ -27,7 +27,7 @@ public class Livesay_2_pacman extends Application {
     static ArrayList<Wall> wallz = new ArrayList<Wall>();
     static ArrayList<Ghost> ghosts = new ArrayList<Ghost>();
     static ArrayList<Pellet> pellets = new ArrayList<Pellet>();
-    static ArrayList<Pacman> pacmans = new ArrayList<Pacman>();
+    //static ArrayList<Pacman> pacmans = new ArrayList<Pacman>();
     static boolean key_right;
     static boolean key_left;
     static boolean key_down;
@@ -280,7 +280,8 @@ public class Livesay_2_pacman extends Application {
             if (key_left) {
                 pacman.goLeft();
             }
-
+            
+            pelletCollision();
         }
 
     }
@@ -296,9 +297,7 @@ public class Livesay_2_pacman extends Application {
             this.setLength(270.0f);
             this.setType(ArcType.ROUND);
             this.setFill(Color.GOLD);
-            pacmans.add(this);
-            root.getChildren().add(this);
-
+            //pacmans.add(this);
         }
 
         void setX(int x) {
@@ -415,7 +414,7 @@ public class Livesay_2_pacman extends Application {
     }
 
     class Pellet extends Rectangle {
-
+        private boolean eaten = false;
         public Pellet(int x, int y, int w, int h) {
             this.setX(x);
             this.setY(y);
@@ -424,23 +423,34 @@ public class Livesay_2_pacman extends Application {
             this.setFill(Color.BLUE);
             pellets.add(this);
             root.getChildren().add(this);
-            if (pelletCollision(this)) {
-                this.setFill(Color.WHITE);
-
-            }
         }
+        
+        public boolean isEaten(){
+            return eaten;
+        }
+        public void setEaten(boolean eaten){
+            this.eaten = eaten;
+            if (eaten){
+            this.setFill(Color.WHITE);
+            }else{
+                this.setFill(Color.BLUE);
+            }
+            }
 
     }
 
-    public boolean pelletCollision(Shape p) {
+    public void pelletCollision() {
 
-        for (Pacman a : pacmans) {
-            if (a.getBoundsInParent().intersects(p.getBoundsInParent())) {
-                return true;
+        for (Pellet p : pellets) {
+            if (!p.isEaten() && pacman.getBoundsInParent().intersects(p.getBoundsInParent())) {
+                p.setEaten(true);
+                
             }
 
+            
+
         }
-        return false;
+        
     }
 
 }
