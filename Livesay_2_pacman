@@ -28,6 +28,8 @@ public class Livesay_2_pacman extends Application {
     static ArrayList<Wall> wallz = new ArrayList<Wall>();
     static ArrayList<Ghost> ghosts = new ArrayList<Ghost>();
     static ArrayList<Pellet> pellets = new ArrayList<Pellet>();
+    static int openclose = 0;
+
 
     static boolean key_right;
     static boolean key_left;
@@ -290,6 +292,8 @@ public class Livesay_2_pacman extends Application {
             if (key_left) {
                 pacman.goLeft();
             }
+            pacman.animate();
+
 
             pelletCollision();
 
@@ -301,6 +305,10 @@ public class Livesay_2_pacman extends Application {
     }
 
     class Pacman extends Arc {
+        boolean movingright = false;
+        boolean movingleft = false;
+        boolean movingup = false;
+        boolean movingdown = false;
 
         public Pacman(int x, int y) {
             this.setCenterX(300.0f);
@@ -312,6 +320,16 @@ public class Livesay_2_pacman extends Application {
             this.setType(ArcType.ROUND);
             this.setFill(Color.GOLD);
             //pacmans.add(this);
+        }
+
+                void animate() {
+            openclose++;
+            if(openclose % 20 == 0){
+                this.setLength(360);
+
+            }else if (openclose % 10 == 0){
+                this.setLength(270);
+            }
         }
 
         void setX(int x) {
@@ -331,19 +349,20 @@ public class Livesay_2_pacman extends Application {
         }
 
         public void goRight() { //THESE TYPES OF METHODS MAKE PACMAN MOVE
+            boolean movingright = true;
             this.setStartAngle(45.0f);
             if (this.getCenterX() > canvas.getWidth()) {
                 this.setX(0);
             }
             int amount = 4;
             if (checkBounds(this)) {
-                //amount = -5;
                 this.setX(this.getX() - 80);
             }
             this.setX(this.getX() + amount);
         }
 
         public void goLeft() {
+            boolean movingleft = true;
             this.setStartAngle(225.0f);
             if (this.getCenterX() < 0) {
                 this.setX((int) canvas.getWidth());
@@ -359,6 +378,7 @@ public class Livesay_2_pacman extends Application {
         }
 
         public void goUp() {
+            boolean movingup = true;
             this.setStartAngle(135.0f);
             if (this.getCenterY() < 0) {
                 this.setY((int) canvas.getHeight());
@@ -374,7 +394,8 @@ public class Livesay_2_pacman extends Application {
         }
 
         public void goDown() {
-            pacman.setStartAngle(315.0f);
+            boolean movingdown = true;
+            this.setStartAngle(315.0f);
             if (this.getCenterY() > canvas.getHeight()) {
                 this.setY(0);
 
@@ -425,7 +446,7 @@ public class Livesay_2_pacman extends Application {
             this.setRadiusX(25.0f);
             this.setRadiusY(25.0f);
             this.setStartAngle(45.0f);
-            this.setLength(270.0f);
+            this.setLength(360.0f);
             this.setType(ArcType.ROUND);
             Random randy = new Random();
             moveDirection = randy.nextInt(4);
