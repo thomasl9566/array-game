@@ -30,7 +30,7 @@ public class Livesay_2_pacman extends Application {
     static ArrayList<Pellet> pellets = new ArrayList<Pellet>();
     static int openclose = 0;
 
-
+    static int amount = 4;
     static boolean key_right;
     static boolean key_left;
     static boolean key_down;
@@ -281,19 +281,21 @@ public class Livesay_2_pacman extends Application {
         private void doHandle() {
             if (key_down) {
                 pacman.goDown();
-
+                amount = 4;
             }
             if (key_right) {
                 pacman.goRight();
+                amount = 4;
             }
             if (key_up) {
                 pacman.goUp();
+                amount = 4;
             }
             if (key_left) {
                 pacman.goLeft();
+                amount = 4;
             }
             pacman.animate();
-
 
             pelletCollision();
 
@@ -305,10 +307,6 @@ public class Livesay_2_pacman extends Application {
     }
 
     class Pacman extends Arc {
-        boolean movingright = false;
-        boolean movingleft = false;
-        boolean movingup = false;
-        boolean movingdown = false;
 
         public Pacman(int x, int y) {
             this.setCenterX(300.0f);
@@ -322,12 +320,12 @@ public class Livesay_2_pacman extends Application {
             //pacmans.add(this);
         }
 
-                void animate() {
+        void animate() {
             openclose++;
-            if(openclose % 20 == 0){
+            if (openclose % 20 == 0) {
                 this.setLength(360);
 
-            }else if (openclose % 10 == 0){
+            } else if (openclose % 10 == 0) {
                 this.setLength(270);
             }
         }
@@ -354,9 +352,10 @@ public class Livesay_2_pacman extends Application {
             if (this.getCenterX() > canvas.getWidth()) {
                 this.setX(0);
             }
-            int amount = 4;
+
             if (checkBounds(this)) {
-                this.setX(this.getX() - 80);
+                this.setX(this.getX() - 6);
+                amount = 0;
             }
             this.setX(this.getX() + amount);
         }
@@ -368,12 +367,11 @@ public class Livesay_2_pacman extends Application {
                 this.setX((int) canvas.getWidth());
 
             }
-            int amount = -4;
             if (checkBounds(this)) {
-                //amount = 5;
-                this.setX(this.getX() + 80);
+                this.setX(this.getX() + 6);
+                amount = 0;
             }
-            this.setX(this.getX() + amount);
+            this.setX(this.getX() - amount);
 
         }
 
@@ -384,13 +382,11 @@ public class Livesay_2_pacman extends Application {
                 this.setY((int) canvas.getHeight());
 
             }
-            int amount = -4;
             if (checkBounds(this)) {
-                //amount = 5;
-                this.setY(this.getY() + 80);
+                this.setY(this.getY() + 6);
+                amount = 0;
             }
-            this.setY(this.getY() + amount);
-
+            this.setY(this.getY() - amount);
         }
 
         public void goDown() {
@@ -400,15 +396,51 @@ public class Livesay_2_pacman extends Application {
                 this.setY(0);
 
             }
-            int amount = 4;
             if (checkBounds(this)) {
-                //amount = -5;
-                this.setY(this.getY() - 80);
+                this.setY(this.getY() - 6);
+                amount = 0;
             }
             this.setY(this.getY() + amount);
 
         }
+        
 
+        public void movePac() {
+            int moveDirection = 0;
+
+            if (moveDirection == 0) {       //left
+
+                this.setCenterX(this.getCenterX() - 3);
+                if (this.getCenterX() < 0) {
+                    this.setCenterX(canvas.getWidth());
+
+                }
+            } else if (moveDirection == 1) {    //right
+
+                this.setCenterX(this.getCenterX() + 3);
+                if (this.getCenterX() > canvas.getWidth()) {
+                    this.setCenterX(0);
+                }
+            }
+            if (moveDirection == 2) {       //up
+
+                this.setCenterY(this.getCenterY() - 3);
+                if (this.getCenterY() < 0) {
+                    this.setCenterY(canvas.getHeight());
+
+                }
+            }
+            if (moveDirection == 3) {       //down
+
+                this.setCenterY(this.getCenterY() + 3);
+                if (this.getCenterY() > canvas.getHeight()) {
+                    this.setCenterY(0);
+
+                }
+
+            }
+
+        }
     }
 
     class Wall extends Rectangle {
@@ -528,7 +560,7 @@ public class Livesay_2_pacman extends Application {
             if (moveDirection == 3) {
                 this.setStartAngle(315.0f); //down
             }
-            */
+             */
 
         }
     }
