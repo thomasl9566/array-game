@@ -20,6 +20,9 @@ import java.util.Random;
 
 public class Livesay_2_pacman extends Application {
 
+    long powerModeEnd = 0;
+    boolean isPowerMode = false;
+
     static GraphicsContext gc;
     static Group root;
     static Pacman pacman; //WHERE PACMAN IS MADE
@@ -28,6 +31,7 @@ public class Livesay_2_pacman extends Application {
     static ArrayList<Wall> wallz = new ArrayList<Wall>();
     static ArrayList<Ghost> ghosts = new ArrayList<Ghost>();
     static ArrayList<Pellet> pellets = new ArrayList<Pellet>();
+    static ArrayList<PowerPellet> powerPellets = new ArrayList<PowerPellet>();
     static int openclose = 0;
 
     static int amount = 4;
@@ -142,6 +146,13 @@ public class Livesay_2_pacman extends Application {
 
         pacman = new Pacman(100, 100);
 
+        powerPellets.add(new PowerPellet(85, 80, 25, 25));
+        powerPellets.add(new PowerPellet(85, 633, 25, 25));
+
+        for (PowerPellet p : powerPellets) {
+            root.getChildren().add(p);
+        }
+
         pellet1 = new Pellet(85, 80, 13, 13);
         pellet2 = new Pellet(85, 160, 13, 13);
         pellet3 = new Pellet(85, 240, 13, 13);
@@ -214,6 +225,10 @@ public class Livesay_2_pacman extends Application {
 
         pellet100 = new Pellet(85, 705, 13, 13);
 
+        for (Pellet p : pellets) {
+            root.getChildren().add(p);
+        }
+
         wall1 = new Wall(150, 150, 285, 175);   //
         wall2 = new Wall(0, 0, 300, 30);    //slim
         wall3 = new Wall(900, 0, 300, 30);  //slim
@@ -232,13 +247,13 @@ public class Livesay_2_pacman extends Application {
         wall16 = new Wall(575, 650, 30, 150);  //middle2
         wall17 = new Wall(530, 400, 150, 10);  //middlemiddle
 
-        for (int i = 0; i < 1; i++) {
-            Ghost g = new Ghost(100, 100);
+        for (int i = 0; i < 7; i++) {
+            Ghost g = new Ghost(100, 100, i);
             ghosts.add(g);
             root.getChildren().add(g);
 
         }
-        new Ghost(800, 400);
+
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
@@ -270,15 +285,7 @@ public class Livesay_2_pacman extends Application {
 
         @Override
         public void handle(long now) {
-            /* if (input.contains("LEFT")) {
-                pacman.setX(pacman.getX() - 4);
 
-            }
-             */
-            doHandle();
-        }
-
-        private void doHandle() {
             if (key_down) {
                 pacman.goDown();
                 amount = 4;
@@ -297,16 +304,36 @@ public class Livesay_2_pacman extends Application {
             }
             pacman.animate();
 
-            pelletCollision();
+            pelletCollision(now);
 
             for (Ghost g : ghosts) {
-                g.moveGhosts();
+                if (pacman.getBoundsInParent().intersects(g.getBoundsInParent())){
+                    if(g.isEatable){
+                        g.setFill(Color.WHITE);
+                        //ghosts.remove(g);
+                    }
+                }else{
+                        g.moveGhosts();
+                }
             }
+
+                if (isPowerMode) {
+                    powerModeEnd--;
+                    if (powerModeEnd <= 0){
+                    isPowerMode = false;
+                    for (Ghost g : ghosts) {
+                        g.setEatable(false);
+                    }
+                }
+            }
+
         }
 
     }
 
     class Pacman extends Arc {
+
+        int amount = 4;
 
         public Pacman(int x, int y) {
             this.setCenterX(300.0f);
@@ -321,11 +348,15 @@ public class Livesay_2_pacman extends Application {
         }
 
         void animate() {
-            openclose++;
-            if (openclose % 20 == 0) {
-                this.setLength(360);
+            if (!checkBounds(this)) {
+                openclose++;
+                if (openclose % 20 == 0) {
+                    this.setLength(360);
 
-            } else if (openclose % 10 == 0) {
+                } else if (openclose % 10 == 0) {
+                    this.setLength(270);
+                }
+            } else {
                 this.setLength(270);
             }
         }
@@ -346,101 +377,84 @@ public class Livesay_2_pacman extends Application {
             return (int) this.getCenterX();
         }
 
+        public void setDirection(int newStartAngle) {
+            int oldStartAngle = (int) getStartAngle();
+            if (newStartAngle == oldStartAngle) {
+                return;
+            }
+
+            setStartAngle((double) newStartAngle);
+            if (checkBounds(this)) {
+                int fixAmt = 14;
+                if (oldStartAngle == 45) {
+                    setX(getX() - fixAmt);
+                } else if (oldStartAngle == 225) {
+                    setX(getX() + fixAmt);
+                } else if (oldStartAngle == 135) {
+                    setY(getY() + fixAmt);
+                } else {
+                    setY(getY() - fixAmt);
+                }
+            }
+
+        }
+
         public void goRight() { //THESE TYPES OF METHODS MAKE PACMAN MOVE
-            boolean movingright = true;
-            this.setStartAngle(45.0f);
+
+            //this.setStartAngle(45.0f);
+            setDirection(45);
             if (this.getCenterX() > canvas.getWidth()) {
                 this.setX(0);
             }
 
-            if (checkBounds(this)) {
-                this.setX(this.getX() - 6);
-                amount = 0;
+            if (!checkBounds(this)) {
+                this.setX(this.getX() + amount);
             }
-            this.setX(this.getX() + amount);
+
         }
 
         public void goLeft() {
-            boolean movingleft = true;
-            this.setStartAngle(225.0f);
+
+            //this.setStartAngle(225.0f);
+            setDirection(225);
             if (this.getCenterX() < 0) {
                 this.setX((int) canvas.getWidth());
 
             }
-            if (checkBounds(this)) {
-                this.setX(this.getX() + 6);
-                amount = 0;
+            if (!checkBounds(this)) {
+                this.setX(this.getX() - amount);
             }
-            this.setX(this.getX() - amount);
 
         }
 
         public void goUp() {
-            boolean movingup = true;
-            this.setStartAngle(135.0f);
+
+            //this.setStartAngle(135.0f);
+            setDirection(135);
             if (this.getCenterY() < 0) {
                 this.setY((int) canvas.getHeight());
 
             }
-            if (checkBounds(this)) {
-                this.setY(this.getY() + 6);
-                amount = 0;
+            if (!checkBounds(this)) {
+                this.setY(this.getY() - amount);
             }
-            this.setY(this.getY() - amount);
+
         }
 
         public void goDown() {
-            boolean movingdown = true;
-            this.setStartAngle(315.0f);
+
+            //this.setStartAngle(315.0f);
+            setDirection(315);
             if (this.getCenterY() > canvas.getHeight()) {
                 this.setY(0);
 
             }
-            if (checkBounds(this)) {
-                this.setY(this.getY() - 6);
-                amount = 0;
-            }
-            this.setY(this.getY() + amount);
-
-        }
-        
-
-        public void movePac() {
-            int moveDirection = 0;
-
-            if (moveDirection == 0) {       //left
-
-                this.setCenterX(this.getCenterX() - 3);
-                if (this.getCenterX() < 0) {
-                    this.setCenterX(canvas.getWidth());
-
-                }
-            } else if (moveDirection == 1) {    //right
-
-                this.setCenterX(this.getCenterX() + 3);
-                if (this.getCenterX() > canvas.getWidth()) {
-                    this.setCenterX(0);
-                }
-            }
-            if (moveDirection == 2) {       //up
-
-                this.setCenterY(this.getCenterY() - 3);
-                if (this.getCenterY() < 0) {
-                    this.setCenterY(canvas.getHeight());
-
-                }
-            }
-            if (moveDirection == 3) {       //down
-
-                this.setCenterY(this.getCenterY() + 3);
-                if (this.getCenterY() > canvas.getHeight()) {
-                    this.setCenterY(0);
-
-                }
-
+            if (!checkBounds(this)) {
+                this.setY(this.getY() + amount);
             }
 
         }
+
     }
 
     class Wall extends Rectangle {
@@ -470,8 +484,10 @@ public class Livesay_2_pacman extends Application {
     class Ghost extends Arc {
 
         int moveDirection;
+        int moveAmt;
+        boolean isEatable = false;
 
-        public Ghost(int x, int y) {
+        public Ghost(int x, int y, int moveAmt) {
             this.setFill(Color.AQUAMARINE);
             this.setCenterX(x);
             this.setCenterY(y);
@@ -482,26 +498,44 @@ public class Livesay_2_pacman extends Application {
             this.setType(ArcType.ROUND);
             Random randy = new Random();
             moveDirection = randy.nextInt(4);
+            this.moveAmt = moveAmt + 1;
+            if (this.moveAmt > 3) {
+                this.moveAmt = 3;
+            }
+        }
+
+        public void setEatable(boolean x) {
+            if (x) {
+                this.setFill(Color.BLUE);
+                isEatable = true;
+            } else {
+                this.setFill(Color.AQUAMARINE);
+                isEatable = false;
+            }
         }
 
         public void moveGhosts() {
+            int moveNow = moveAmt;
+            if (isEatable) {
+                moveNow += 3;
+            }
             if (moveDirection == 0) {       //left
 
-                this.setCenterX(this.getCenterX() - 3);
+                this.setCenterX(this.getCenterX() - moveNow);
                 if (this.getCenterX() < 0) {
                     this.setCenterX(canvas.getWidth());
 
                 }
             } else if (moveDirection == 1) {    //right
 
-                this.setCenterX(this.getCenterX() + 3);
+                this.setCenterX(this.getCenterX() + moveNow);
                 if (this.getCenterX() > canvas.getWidth()) {
                     this.setCenterX(0);
                 }
             }
             if (moveDirection == 2) {       //up
 
-                this.setCenterY(this.getCenterY() - 3);
+                this.setCenterY(this.getCenterY() - moveNow);
                 if (this.getCenterY() < 0) {
                     this.setCenterY(canvas.getHeight());
 
@@ -509,7 +543,7 @@ public class Livesay_2_pacman extends Application {
             }
             if (moveDirection == 3) {       //down
 
-                this.setCenterY(this.getCenterY() + 3);
+                this.setCenterY(this.getCenterY() + moveNow);
                 if (this.getCenterY() > canvas.getHeight()) {
                     this.setCenterY(0);
 
@@ -576,7 +610,7 @@ public class Livesay_2_pacman extends Application {
             this.setHeight(h);
             this.setFill(Color.BLUE);
             pellets.add(this);
-            root.getChildren().add(this);
+
         }
 
         public boolean isEaten() {
@@ -594,7 +628,7 @@ public class Livesay_2_pacman extends Application {
 
     }
 
-    public void pelletCollision() {
+    public void pelletCollision(long now) {
 
         for (Pellet p : pellets) {
             if (!p.isEaten() && pacman.getBoundsInParent().intersects(p.getBoundsInParent())) {
@@ -602,6 +636,43 @@ public class Livesay_2_pacman extends Application {
 
             }
 
+        }
+
+        for (PowerPellet p : powerPellets) {
+            if (!p.isEaten() && pacman.getBoundsInParent().intersects(p.getBoundsInParent())) {
+                p.setEaten(true);
+                isPowerMode = true;
+                powerModeEnd = 500;
+                ghosts.forEach(ghost -> ghost.setEatable(true));
+            }
+
+        }
+
+    }
+
+    public class PowerPellet extends Rectangle {
+
+        private boolean eaten = false;
+
+        public PowerPellet(int x, int y, int w, int h) {
+            this.setX(x);
+            this.setY(y);
+            this.setWidth(w);
+            this.setHeight(h);
+            this.setFill(Color.BLUE);
+        }
+
+        public boolean isEaten() {
+            return eaten;
+        }
+
+        public void setEaten(boolean eaten) {
+            this.eaten = eaten;
+            if (eaten) {
+                this.setFill(Color.WHITE);
+            } else {
+                this.setFill(Color.BLUE);
+            }
         }
 
     }
