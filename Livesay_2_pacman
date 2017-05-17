@@ -307,23 +307,34 @@ public class Livesay_2_pacman extends Application {
             pelletCollision(now);
 
             for (Ghost g : ghosts) {
-                if (pacman.getBoundsInParent().intersects(g.getBoundsInParent())){
-                    if(g.isEatable){
-                        g.setFill(Color.WHITE);
+                if (pacman.getBoundsInParent().intersects(g.getBoundsInParent())) {
+                    if (g.isEatable && !g.ghostEaten) {
+                        //g.setFill(Color.WHITE);
+                        g.ghostEaten = true;
                         //ghosts.remove(g);
+                        Color c=new Color(1f,0f,0f,0f );
+                        g.setFill(c);
                     }
-                }else{
-                        g.moveGhosts();
+                } else {
+                    g.moveGhosts();
                 }
             }
 
-                if (isPowerMode) {
-                    powerModeEnd--;
-                    if (powerModeEnd <= 0){
+            if (isPowerMode) {
+                powerModeEnd--;
+                if (powerModeEnd <= 0) {
                     isPowerMode = false;
                     for (Ghost g : ghosts) {
                         g.setEatable(false);
+                        if (g.ghostEaten) {
+                            Color c=new Color(1f,0f,0f,0f );
+                            g.setFill(c);
+                        }
+                        if (!g.ghostEaten) {
+                            g.setFill(Color.AQUAMARINE);
+                        }
                     }
+
                 }
             }
 
@@ -486,6 +497,7 @@ public class Livesay_2_pacman extends Application {
         int moveDirection;
         int moveAmt;
         boolean isEatable = false;
+        boolean ghostEaten = false;
 
         public Ghost(int x, int y, int moveAmt) {
             this.setFill(Color.AQUAMARINE);
@@ -505,12 +517,14 @@ public class Livesay_2_pacman extends Application {
         }
 
         public void setEatable(boolean x) {
-            if (x) {
-                this.setFill(Color.BLUE);
-                isEatable = true;
-            } else {
-                this.setFill(Color.AQUAMARINE);
-                isEatable = false;
+            for (Ghost g : ghosts) {
+                if (x && !g.ghostEaten) {
+                    this.setFill(Color.BLUE);
+                    isEatable = true;
+                } else {
+                    //this.setFill(Color.AQUAMARINE);
+                    isEatable = false;
+                }
             }
         }
 
@@ -582,19 +596,6 @@ public class Livesay_2_pacman extends Application {
                 Random randy = new Random();
                 moveDirection = randy.nextInt(4);
             }
-            /* if (moveDirection == 0) {
-                this.setStartAngle(225.0f); //left
-            }
-             else if (moveDirection == 1) {
-                this.setStartAngle(45.0f); //right
-            }
-            if (moveDirection == 2) {
-                this.setStartAngle(135.0f); //up
-            }
-            if (moveDirection == 3) {
-                this.setStartAngle(315.0f); //down
-            }
-             */
 
         }
     }
