@@ -130,6 +130,8 @@ public class Livesay_2_pacman extends Application {
     static Wall wall16;
     static Wall wall17;
 
+    static LoseScreen losescreen;
+
     @Override
     public void start(Stage primaryStage) {
 
@@ -247,6 +249,8 @@ public class Livesay_2_pacman extends Application {
         wall16 = new Wall(575, 650, 30, 150);  //middle2
         wall17 = new Wall(530, 400, 150, 10);  //middlemiddle
 
+        losescreen = new LoseScreen(0, 0, 0, 0);
+
         for (int i = 0; i < 7; i++) {
             Ghost g = new Ghost(100, 100, i);
             ghosts.add(g);
@@ -308,11 +312,14 @@ public class Livesay_2_pacman extends Application {
 
             for (Ghost g : ghosts) {
                 if (pacman.getBoundsInParent().intersects(g.getBoundsInParent())) {
+                    if (!g.isEatable && !g.ghostEaten) {
+                        losescreen.Lose();
+                    }
                     if (g.isEatable && !g.ghostEaten) {
                         //g.setFill(Color.WHITE);
                         g.ghostEaten = true;
                         //ghosts.remove(g);
-                        Color c=new Color(1f,0f,0f,0f );
+                        Color c = new Color(1f, 0f, 0f, 0f);
                         g.setFill(c);
                     }
                 } else {
@@ -327,7 +334,7 @@ public class Livesay_2_pacman extends Application {
                     for (Ghost g : ghosts) {
                         g.setEatable(false);
                         if (g.ghostEaten) {
-                            Color c=new Color(1f,0f,0f,0f );
+                            Color c = new Color(1f, 0f, 0f, 0f);
                             g.setFill(c);
                         }
                         if (!g.ghostEaten) {
@@ -644,7 +651,11 @@ public class Livesay_2_pacman extends Application {
                 p.setEaten(true);
                 isPowerMode = true;
                 powerModeEnd = 500;
-                ghosts.forEach(ghost -> ghost.setEatable(true));
+                for (Ghost g : ghosts) {
+                    if (!g.ghostEaten) {
+                        g.setEatable(true);
+                    }
+                }
             }
 
         }
@@ -675,6 +686,27 @@ public class Livesay_2_pacman extends Application {
                 this.setFill(Color.BLUE);
             }
         }
+
+    }
+
+    class LoseScreen extends Rectangle {
+
+        public LoseScreen(int x, int y, int w, int h) {
+            this.setX(x);
+            this.setY(y);
+            this.setWidth(1200);
+            this.setHeight(800);
+            this.setFill(Color.BLACK);
+            String text = new String("YOU LOSE");
+            System.out.print(text);
+            
+        }
+
+        public void Lose() {
+            //System.exit(0);
+            root.getChildren().add(this);
+        }
+        
 
     }
 
