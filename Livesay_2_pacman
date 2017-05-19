@@ -715,8 +715,6 @@ public class Livesay_2_pacman extends Application {
             this.setWidth(1200);
             this.setHeight(800);
             this.setFill(Color.BLACK);
-            String text = new String("YOU LOSE");
-            System.out.print(text);
             losetext.setText("YOU LOSE");
             losetext.setFill(Color.YELLOW);
             losetext.setFont(Font.font("Veranda", 150));
@@ -740,7 +738,7 @@ public class Livesay_2_pacman extends Application {
     public boolean allPelletsEaten() {
         for (Pellet p : pellets) {
             if (!p.isEaten()) {
-                System.out.println("uneaten pellet" + p.xProperty() + ", " + p.yProperty());
+                //System.out.println("uneaten pellet" + p.xProperty() + ", " + p.yProperty());
                 return false;
                 
             }
