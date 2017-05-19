@@ -17,6 +17,8 @@ import javafx.stage.Stage;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import java.util.Random;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 public class Livesay_2_pacman extends Application {
 
@@ -131,6 +133,7 @@ public class Livesay_2_pacman extends Application {
     static Wall wall17;
 
     static LoseScreen losescreen;
+    static WinScreen winscreen;
 
     @Override
     public void start(Stage primaryStage) {
@@ -150,6 +153,8 @@ public class Livesay_2_pacman extends Application {
 
         powerPellets.add(new PowerPellet(85, 80, 25, 25));
         powerPellets.add(new PowerPellet(85, 633, 25, 25));
+        powerPellets.add(new PowerPellet(1090, 633, 25, 25));
+        powerPellets.add(new PowerPellet(1090, 80, 25, 25));
 
         for (PowerPellet p : powerPellets) {
             root.getChildren().add(p);
@@ -218,7 +223,7 @@ public class Livesay_2_pacman extends Application {
         pellet62 = new Pellet(850, 400, 13, 13);
         pellet63 = new Pellet(935, 400, 13, 13);
         pellet64 = new Pellet(1015, 400, 13, 13);
-        pellet65 = new Pellet(370, 780, 13, 13);
+        
         pellet66 = new Pellet(820, 780, 13, 13);
         pellet67 = new Pellet(370, 0, 13, 13);
         pellet68 = new Pellet(820, 0, 13, 13);
@@ -229,6 +234,7 @@ public class Livesay_2_pacman extends Application {
 
         for (Pellet p : pellets) {
             root.getChildren().add(p);
+            
         }
 
         wall1 = new Wall(150, 150, 285, 175);   //
@@ -250,6 +256,7 @@ public class Livesay_2_pacman extends Application {
         wall17 = new Wall(530, 400, 150, 10);  //middlemiddle
 
         losescreen = new LoseScreen(0, 0, 0, 0);
+        winscreen = new WinScreen(0, 0, 0, 0);
 
         for (int i = 0; i < 7; i++) {
             Ghost g = new Ghost(100, 100, i);
@@ -313,7 +320,8 @@ public class Livesay_2_pacman extends Application {
             for (Ghost g : ghosts) {
                 if (pacman.getBoundsInParent().intersects(g.getBoundsInParent())) {
                     if (!g.isEatable && !g.ghostEaten) {
-                        losescreen.Lose();
+                        // losescreen.Lose();
+
                     }
                     if (g.isEatable && !g.ghostEaten) {
                         //g.setFill(Color.WHITE);
@@ -339,6 +347,8 @@ public class Livesay_2_pacman extends Application {
                         }
                         if (!g.ghostEaten) {
                             g.setFill(Color.AQUAMARINE);
+
+                            g.isEatable = false;
                         }
                     }
 
@@ -528,10 +538,10 @@ public class Livesay_2_pacman extends Application {
                 if (x && !g.ghostEaten) {
                     this.setFill(Color.BLUE);
                     isEatable = true;
-                } else {
-                    //this.setFill(Color.AQUAMARINE);
-                    isEatable = false;
-                }
+                } //else {
+                //this.setFill(Color.AQUAMARINE);
+                //  isEatable = false;
+                //  }
             }
         }
 
@@ -540,6 +550,7 @@ public class Livesay_2_pacman extends Application {
             if (isEatable) {
                 moveNow += 3;
             }
+
             if (moveDirection == 0) {       //left
 
                 this.setCenterX(this.getCenterX() - moveNow);
@@ -659,6 +670,10 @@ public class Livesay_2_pacman extends Application {
             }
 
         }
+        if (allPelletsEaten()) {
+            root.getChildren().add(winscreen);
+            root.getChildren().add(winscreen.wintext);
+        }
 
     }
 
@@ -691,6 +706,9 @@ public class Livesay_2_pacman extends Application {
 
     class LoseScreen extends Rectangle {
 
+        boolean gameover = false;
+        Text losetext = new Text(300, 380, "");
+
         public LoseScreen(int x, int y, int w, int h) {
             this.setX(x);
             this.setY(y);
@@ -699,14 +717,56 @@ public class Livesay_2_pacman extends Application {
             this.setFill(Color.BLACK);
             String text = new String("YOU LOSE");
             System.out.print(text);
-            
+            losetext.setText("YOU LOSE");
+            losetext.setFill(Color.YELLOW);
+            losetext.setFont(Font.font("Veranda", 150));
+
         }
 
         public void Lose() {
             //System.exit(0);
-            root.getChildren().add(this);
+
+            if (!gameover) {
+                root.getChildren().add(this);
+                root.getChildren().add(losetext);
+                gameover = true;
+
+            }
+
         }
-        
+
+    }
+
+    public boolean allPelletsEaten() {
+        for (Pellet p : pellets) {
+            if (!p.isEaten()) {
+                System.out.println("uneaten pellet" + p.xProperty() + ", " + p.yProperty());
+                return false;
+                
+            }
+        }
+        return true;
+
+    }
+
+    class WinScreen extends Rectangle {
+
+        boolean win = false;
+        Text wintext = new Text(300, 380, "");
+
+        public WinScreen(int x, int y, int w, int h) {
+            this.setX(x);
+            this.setY(y);
+            this.setWidth(1200);
+            this.setHeight(800);
+            this.setFill(Color.BLACK);
+            String text = new String("YOU LOSE");
+            System.out.print(text);
+            wintext.setText("YOU WIN");
+            wintext.setFill(Color.YELLOW);
+            wintext.setFont(Font.font("Veranda", 150));
+
+        }
 
     }
 
