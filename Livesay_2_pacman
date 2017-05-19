@@ -105,7 +105,7 @@ public class Livesay_2_pacman extends Application {
     static Pellet pellet62;
     static Pellet pellet63;
     static Pellet pellet64;
-    static Pellet pellet65;
+
     static Pellet pellet66;
     static Pellet pellet67;
     static Pellet pellet68;
@@ -760,8 +760,6 @@ public class Livesay_2_pacman extends Application {
             this.setWidth(1200);
             this.setHeight(800);
             this.setFill(Color.BLACK);
-            String text = new String("YOU LOSE");
-            System.out.print(text);
             wintext.setText("YOU WIN");
             wintext.setFill(Color.YELLOW);
             wintext.setFont(Font.font("Veranda", 150));
